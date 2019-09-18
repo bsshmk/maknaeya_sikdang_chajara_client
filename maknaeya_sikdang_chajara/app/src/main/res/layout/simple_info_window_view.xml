@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/foodRelativeLayout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="15dp"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+
+>
+
+    <TextView
+            android:textSize="40dp"
+            android:textStyle="bold"
+            android:text="맛집"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/simple_info_window_view_restaurantName_TextView"/>
+    <View
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:id="@+id/simple_info_window_view_restaurantNameLine_View"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/simple_info_window_view_restaurantName_TextView"
+            android:background="@color/cardview_shadow_start_color" />
+    <TextView
+            android:gravity="center"
+            android:textSize="30dp"
+            android:text="평점"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/simple_info_window_view_restaurantNameLine_View"
+            android:id="@+id/simple_info_window_view_restaurantRateTitle_TextView"/>
+    <TextView
+            android:gravity="center"
+            android:textSize="30dp"
+            android:text="리뷰"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/simple_info_window_view_restaurantNameLine_View"
+            android:layout_alignParentRight="true"
+            android:id="@+id/simple_info_window_view_restaurantReviewCountTitle_TextView"/>
+    <TextView
+            android:gravity="center"
+            android:textSize="60dp"
+            android:textStyle="bold"
+            android:text="4.0"
+            android:layout_width="150dp"
+            android:layout_height="80dp"
+            android:layout_below="@+id/simple_info_window_view_restaurantRateTitle_TextView"
+            android:id="@+id/simple_info_window_view_restaurantRate_TextView"/>
+    <TextView
+            android:gravity="center"
+            android:textSize="50dp"
+            android:textStyle="bold"
+            android:text="100개"
+            android:layout_width="150dp"
+            android:layout_height="80dp"
+            android:layout_below="@+id/simple_info_window_view_restaurantReviewCountTitle_TextView"
+            android:layout_alignParentRight="true"
+            android:id="@+id/simple_info_window_view_restaurantReviewCount_TextView"/>
+
+    <TextView
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:textSize="30dp"
+            android:text="대표음식"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/simple_info_window_view_restaurantRate_TextView"
+            android:layout_alignParentRight="true"
+            android:id="@+id/simple_info_window_view_restaurantMainMenu_TextView"/>
+
+</RelativeLayout>

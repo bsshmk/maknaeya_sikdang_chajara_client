@@ -109,7 +109,7 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
         }
     }
     private fun makeRestaurantInfoView(context:Context, id:String){
-        var foodInfoView = View.inflate(context, com.mksoft.maknaeya_sikdang_chajara.R.layout.test_image, null)
+        var foodInfoView = View.inflate(context, com.mksoft.maknaeya_sikdang_chajara.R.layout.simple_info_window_view, null)
         val foodInfoTitle = foodInfoView.findViewById<TextView>(com.mksoft.maknaeya_sikdang_chajara.R.id.textView)
         val foodInfoImageView = foodInfoView.findViewById<ImageView>(com.mksoft.maknaeya_sikdang_chajara.R.id.food_image)
         foodInfoTitle.setText(idAndRestaurantInfo[id]!!.restaurantName)
