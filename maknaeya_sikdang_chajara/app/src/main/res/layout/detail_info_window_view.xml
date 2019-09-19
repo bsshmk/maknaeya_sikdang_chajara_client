@@ -16,19 +16,19 @@
             android:orientation="vertical">
         <TextView
                 android:gravity="center"
-                android:textSize="30dp"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 android:text="맛집"
                 android:layout_width="wrap_content"
-                android:layout_height="55dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/detail_info_window_view_restaurantName_TextView"/>
         <TextView
                 android:layout_alignParentRight="true"
                 android:gravity="center"
-                android:textSize="20dp"
+                android:textSize="15dp"
                 android:text="4.0"
-                android:layout_width="75dp"
-                android:layout_height="35dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:id="@+id/detail_info_window_view_restaurantRate_TextView"/>
 
 
@@ -41,17 +41,17 @@
             android:layout_below="@+id/detail_info_window_view_topLayout_LinearLayout">
         <ImageView
                 android:id="@+id/detail_info_window_view_foodImage_ImageView"
-                android:layout_width="170dp"
-                android:layout_height="170dp"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
                 android:src="@drawable/ic_launcher_foreground"/>
         <ScrollView
                 android:layout_below="@+id/detail_info_window_view_restaurantNameLine_View"
-                android:layout_width="200dp"
-                android:layout_height="170dp"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
                 android:layout_alignParentRight="true"
         >
             <TextView
-                    android:layout_margin = "5dp"
+                    android:layout_margin="5dp"
                     android:text="text"
                     android:id="@+id/detail_info_window_view_detailContents_TextView"
                     android:layout_width="match_parent"

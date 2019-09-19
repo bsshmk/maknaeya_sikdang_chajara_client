@@ -32,7 +32,7 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
     private val restaurantIdAndInfoWindow:HashMap<String, InfoWindow> = HashMap()
     val restaurantIdAndSimpleView:HashMap<String, View> = HashMap()//한번 클릭시 보이는 뷰
     val restaurantIdAndDetailView:HashMap<String, View> = HashMap()
-    var infoWindowOpenState: Boolean = false
+    //var infoWindowOpenState: Boolean = false
     var currentOpenInfoWindowRestaurantId:String = ""
     var currentOpenInfoWindowViewState:Int = 0//뷰의 상태가 심플인지 디테일인지
     private lateinit var subscription: Disposable
@@ -104,7 +104,7 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
         val detailInfoMainMenuPrices = detailInfoView.findViewById<TextView>(id.detail_info_window_view_mainMenuPrices_TextView)
 
         detailInfoTiTle.text = restaurantIdAndRestaurant[restaurantId]!!.restaurant_name
-        detailInfoRate.text = restaurantIdAndRestaurant[restaurantId]!!.rating
+        detailInfoRate.text = restaurantIdAndRestaurant[restaurantId]!!.rating+"점"
         detailInfoContents.text = restaurantIdAndRestaurant[restaurantId]!!.category+"\n"
         detailInfoContents.append(restaurantIdAndRestaurant[restaurantId]!!.phone_number+"\n")
         detailInfoContents.append(restaurantIdAndRestaurant[restaurantId]!!.location)
@@ -143,8 +143,7 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
 
         }
         naverMap.setOnMapClickListener { pointF, latLng ->
-            if(infoWindowOpenState){
-                infoWindowOpenState = false
+            if(currentOpenInfoWindowRestaurantId != ""){
                 restaurantIdAndInfoWindow[currentOpenInfoWindowRestaurantId]!!.close()
                 currentOpenInfoWindowRestaurantId = ""
                 currentOpenInfoWindowViewState = string.view_state_simple
@@ -174,7 +173,7 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
 
             }else if(currentOpenInfoWindowViewState == string.view_state_detail){
                 currentOpenInfoWindowViewState = string.view_state_simple
-                restaurantIdAndInfoWindow[id]!!.close()
+                restaurantIdAndInfoWindow[id]!!.close()//기존에 있는 뷰를 닫아주고 새로운 view를 오픈해줘야한다.
                 restaurantIdAndInfoWindow[id]!!.open(restaurantIdAndMarker[id]!!)
 
             }
@@ -189,11 +188,8 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
 
             if (marker.infoWindow == null) {
                 // 현재 마커에 정보 창이 열려있지 않을 경우 엶
-                if(!infoWindowOpenState){
-                    infoWindowOpenState = true
-                }else{
+                if(currentOpenInfoWindowRestaurantId != ""){
                     restaurantIdAndInfoWindow[currentOpenInfoWindowRestaurantId]!!.close()
-
                 }
                 currentOpenInfoWindowViewState = string.view_state_simple
                 restaurantIdAndInfoWindow[id]!!.open(restaurantIdAndMarker[id]!!)
@@ -202,6 +198,7 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
                 // 이미 현재 마커에 정보 창이 열려있을 경우 닫음
                 currentOpenInfoWindowViewState = string.view_state_simple
                 restaurantIdAndInfoWindow[id]!!.close()
+                currentOpenInfoWindowRestaurantId = ""
                 //이거 호출하면 맵이 리프래쉬됨
                 //필터를 통하여 남은 음식적으로 리스트로 만들어서 관리
                 //원본 음식점 배열은 유지
