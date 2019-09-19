@@ -9,69 +9,63 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
 
 >
-
-    <TextView
-            android:gravity="center"
-            android:textSize="30dp"
-            android:textStyle="bold"
-            android:text="맛집"
-            android:layout_width="wrap_content"
-            android:layout_height="55dp"
-            android:id="@+id/detail_info_window_view_restaurantName_TextView"/>
-    <TextView
-            android:layout_alignParentRight="true"
-            android:gravity="center"
-            android:textSize="15dp"
-            android:text="평점"
-            android:layout_width="75dp"
-            android:layout_height="20dp"
-            android:id="@+id/detail_info_window_view_restaurantRateTitle_TextView"/>
-    <TextView
-            android:layout_alignParentRight="true"
-            android:gravity="center"
-            android:textSize="30dp"
-            android:textStyle="bold"
-            android:text="4.0"
-            android:layout_width="75dp"
-            android:layout_height="35dp"
-            android:layout_below="@+id/detail_info_window_view_restaurantRateTitle_TextView"
-            android:id="@+id/detail_info_window_view_restaurantRate_TextView"/>
-
-    <View
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:id="@+id/detail_info_window_view_restaurantNameLine_View"
+    <LinearLayout
+            android:id="@+id/detail_info_window_view_topLayout_LinearLayout"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/detail_info_window_view_restaurantName_TextView"
-            android:background="@color/cardview_shadow_start_color" />
-
-    <ImageView
-            android:id="@+id/detail_info_window_view_foodImage_ImageView"
-            android:layout_below="@+id/detail_info_window_view_restaurantNameLine_View"
-            android:layout_width="170dp"
-            android:layout_height="170dp"
-            android:src="@drawable/ic_launcher_foreground"/>
-    <ScrollView
-            android:layout_below="@+id/detail_info_window_view_restaurantNameLine_View"
-            android:layout_width="200dp"
-            android:layout_height="170dp"
-            android:layout_alignParentRight="true"
-            >
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
         <TextView
-                android:layout_margin = "5dp"
-                android:text="text"
-                android:id="@+id/detail_info_window_view_detailContents_TextView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:gravity="center"
+                android:textSize="30dp"
+                android:textStyle="bold"
+                android:text="맛집"
+                android:layout_width="wrap_content"
+                android:layout_height="55dp"
+                android:id="@+id/detail_info_window_view_restaurantName_TextView"/>
+        <TextView
+                android:layout_alignParentRight="true"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:text="4.0"
+                android:layout_width="75dp"
+                android:layout_height="35dp"
+                android:id="@+id/detail_info_window_view_restaurantRate_TextView"/>
 
-    </ScrollView>
+
+    </LinearLayout>
+    <LinearLayout
+            android:id="@+id/detail_info_window_view_midLayout_LinearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/detail_info_window_view_topLayout_LinearLayout">
+        <ImageView
+                android:id="@+id/detail_info_window_view_foodImage_ImageView"
+                android:layout_width="170dp"
+                android:layout_height="170dp"
+                android:src="@drawable/ic_launcher_foreground"/>
+        <ScrollView
+                android:layout_below="@+id/detail_info_window_view_restaurantNameLine_View"
+                android:layout_width="200dp"
+                android:layout_height="170dp"
+                android:layout_alignParentRight="true"
+        >
+            <TextView
+                    android:layout_margin = "5dp"
+                    android:text="text"
+                    android:id="@+id/detail_info_window_view_detailContents_TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+        </ScrollView>
+
+    </LinearLayout>
 
     <TextView
-            android:id="@+id/detail_info_window_view_foodList_TextView"
+            android:id="@+id/detail_info_window_view_mainMenuPrices_TextView"
             android:layout_marginTop="10dp"
             android:text="음식 : 1000원"
-            android:layout_below="@+id/detail_info_window_view_foodImage_ImageView"
+            android:layout_below="@+id/detail_info_window_view_midLayout_LinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     <androidx.recyclerview.widget.RecyclerView
@@ -79,7 +73,7 @@
             android:id="@+id/detail_info_window_view_reviewView_RecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/detail_info_window_view_foodList_TextView"
+            android:layout_below="@+id/detail_info_window_view_mainMenuPrices_TextView"
 
 
     />

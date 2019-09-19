@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">maknaeya_sikdang_chajara</string>
+    <string name="view_state_simple">simple</string>
+    <string name="view_state_detail">detail</string>
+
 </resources>
