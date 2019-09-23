@@ -7,13 +7,17 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.UiThread
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mksoft.maknaeya_sikdang_chajara.App
 import com.mksoft.maknaeya_sikdang_chajara.R
 import com.mksoft.maknaeya_sikdang_chajara.R.*
 import com.mksoft.maknaeya_sikdang_chajara.base.BaseViewModel
 import com.mksoft.maknaeya_sikdang_chajara.model.Restaurant
+import com.mksoft.maknaeya_sikdang_chajara.model.Review
 import com.mksoft.maknaeya_sikdang_chajara.ui_view.FoodMapActivity
+import com.mksoft.maknaeya_sikdang_chajara.ui_view.ReviewListAdapter
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
@@ -29,6 +33,7 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
 
     private val restaurantIdAndRestaurant:HashMap<String, Restaurant> = HashMap()
     private val restaurantIdAndMarker:HashMap<String, Marker> = HashMap()
+    private val restaurantIdAndReview:HashMap<String, MutableList<Review>> = HashMap()
     private val restaurantIdAndInfoWindow:HashMap<String, InfoWindow> = HashMap()
     val restaurantIdAndSimpleView:HashMap<String, View> = HashMap()//한번 클릭시 보이는 뷰
     val restaurantIdAndDetailView:HashMap<String, View> = HashMap()
@@ -71,10 +76,21 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
         ,"4.7", "서울시", "37.5670135", "126.9783740", "https://img.siksinhot.com/place/1463988124958100.png?w=307&h=300&c=Y",
             "삼겹살","삼겹살 160g - 37000원","130")
         restaurantIdAndRestaurant["1"] = restaurant1
+        restaurantIdAndReview["1"] = mutableListOf()
+        val restaurant1_review1 = Review("r1", "1", "cmk5432","존맛탱","4.5")
+        val restaurant1_review2 = Review("r2", "1", "bs1112","개 노맛","1")
+        restaurantIdAndReview[restaurant1_review1.restaurant_id]!!.add(restaurant1_review1)
+        restaurantIdAndReview[restaurant1_review2.restaurant_id]!!.add(restaurant1_review2)
+
         val restaurant2 = Restaurant("2", "맛집1", "www.naver.com","육식", "010-1234_1321"
             ,"4.7", "서울시", "37.565725", "126.977906", "https://img.siksinhot.com/place/1463988124958100.png?w=307&h=300&c=Y",
             "삼겹살","삼겹살 160g - 37000원","130")
         restaurantIdAndRestaurant["2"] = restaurant2
+        restaurantIdAndReview["2"] = mutableListOf()
+        val restaurant2_review1 = Review("r3", "2", "cmk","존맛탱2222","4.5")
+        val restaurant2_review2 = Review("r4", "2", "bs112","개 노맛ㅜㅜ","1.5")
+        restaurantIdAndReview[restaurant2_review1.restaurant_id]!!.add(restaurant2_review1)
+        restaurantIdAndReview[restaurant2_review2.restaurant_id]!!.add(restaurant2_review2)
 
     }
     private fun initInfoWind(id:String){
@@ -102,6 +118,9 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
         val detailInfoRate = detailInfoView.findViewById<TextView>(id.detail_info_window_view_restaurantRate_TextView)
         val detailInfoContents = detailInfoView.findViewById<TextView>(id.detail_info_window_view_detailContents_TextView)
         val detailInfoMainMenuPrices = detailInfoView.findViewById<TextView>(id.detail_info_window_view_mainMenuPrices_TextView)
+        val detailInfoReviewViewRecyclerView = detailInfoView.findViewById<RecyclerView>(id.detail_info_window_view_reviewView_RecyclerView)
+
+
 
         detailInfoTiTle.text = restaurantIdAndRestaurant[restaurantId]!!.restaurant_name
         detailInfoRate.text = restaurantIdAndRestaurant[restaurantId]!!.rating+"점"
@@ -111,6 +130,10 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
         detailInfoMainMenuPrices.text = restaurantIdAndRestaurant[restaurantId]!!.main_menu_price
         Glide.with(detailInfoView.context).load(restaurantIdAndRestaurant[restaurantId]!!.image_src).into(detailInfoImage)
         //리뷰 어뎁터 만들기
+        val thisReviewListAdapter = ReviewListAdapter()
+        detailInfoReviewViewRecyclerView.adapter = thisReviewListAdapter
+        detailInfoReviewViewRecyclerView.layoutManager = LinearLayoutManager(detailInfoView.context)
+        thisReviewListAdapter.updateReviewList(restaurantIdAndReview[restaurantId]!!)
         restaurantIdAndDetailView[restaurantId] = detailInfoView
     }
 

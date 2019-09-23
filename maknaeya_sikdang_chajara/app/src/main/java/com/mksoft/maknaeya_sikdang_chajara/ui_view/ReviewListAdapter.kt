@@ -1,0 +1,43 @@
+package com.mksoft.maknaeya_sikdang_chajara.ui_view
+
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.RecyclerView
+import com.mksoft.maknaeya_sikdang_chajara.R
+import com.mksoft.maknaeya_sikdang_chajara.model.Review
+import kotlinx.android.synthetic.main.review_view.view.*
+
+class ReviewListAdapter : RecyclerView.Adapter<ReviewListAdapter.ReviewViewHolder>(){
+
+    private lateinit var reviewList:List<Review>
+
+    override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
+        holder.bind(reviewList[position])
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewListAdapter.ReviewViewHolder {
+        return ReviewViewHolder(parent)
+    }
+
+    override fun getItemCount(): Int {
+        return if(::reviewList.isInitialized) reviewList.size else 0
+    }
+
+    fun updateReviewList(reviewList: List<Review>){
+        this.reviewList = reviewList
+        notifyDataSetChanged()
+    }
+    inner class ReviewViewHolder(parent:ViewGroup):RecyclerView.ViewHolder( LayoutInflater.from(parent.context).inflate(R.layout.review_view, parent, false)){
+        val nameAndRate = itemView.review_view_nameAndRate_TextView
+        val contents = itemView.review_view_contents_TextView
+        fun bind(review:Review){
+            nameAndRate.text = review.writer_id+" / "+ review.review_score
+            contents.text = review.review_contents
+        }
+    }
+
+
+}
