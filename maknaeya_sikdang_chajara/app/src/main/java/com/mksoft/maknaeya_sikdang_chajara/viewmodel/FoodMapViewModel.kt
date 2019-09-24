@@ -2,7 +2,6 @@ package com.mksoft.maknaeya_sikdang_chajara.viewmodel
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -11,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mksoft.maknaeya_sikdang_chajara.App
-import com.mksoft.maknaeya_sikdang_chajara.R
 import com.mksoft.maknaeya_sikdang_chajara.R.*
 import com.mksoft.maknaeya_sikdang_chajara.base.BaseViewModel
 import com.mksoft.maknaeya_sikdang_chajara.model.Restaurant
@@ -96,7 +94,10 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
     private fun initInfoWind(id:String){
         restaurantIdAndInfoWindow[id] = InfoWindow()
         restaurantIdAndInfoWindow[id]!!.onClickListener = infoWindowListener(id)
+
+
         restaurantIdAndInfoWindow[id]!!.adapter = object : InfoWindow.DefaultViewAdapter(App.applicationContext()) {
+
             override fun getContentView(p0: InfoWindow): View {
 
                 if(currentOpenInfoWindowViewState == string.view_state_detail) {
@@ -113,12 +114,12 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
     @SuppressLint("SetTextI18n")
     private fun makeDetailInfoView(context:Context, restaurantId:String){
         val detailInfoView = View.inflate(context, layout.detail_info_window_view, null)
-        val detailInfoTiTle = detailInfoView.findViewById<TextView>(id.detail_info_window_view_restaurantName_TextView)
-        val detailInfoImage = detailInfoView.findViewById<ImageView>(id.detail_info_window_view_foodImage_ImageView)
-        val detailInfoRate = detailInfoView.findViewById<TextView>(id.detail_info_window_view_restaurantRate_TextView)
-        val detailInfoContents = detailInfoView.findViewById<TextView>(id.detail_info_window_view_detailContents_TextView)
-        val detailInfoMainMenuPrices = detailInfoView.findViewById<TextView>(id.detail_info_window_view_mainMenuPrices_TextView)
-        val detailInfoReviewViewRecyclerView = detailInfoView.findViewById<RecyclerView>(id.detail_info_window_view_reviewView_RecyclerView)
+        val detailInfoTiTle = detailInfoView.findViewById<TextView>(id.food_map_activity_dragLayoutRestaurantName_TextView)
+        val detailInfoImage = detailInfoView.findViewById<ImageView>(id.food_map_activity_dragLayoutFoodImage_ImageView)
+        val detailInfoRate = detailInfoView.findViewById<TextView>(id.food_map_activity_dragLayoutRestaurantRate_TextView)
+        val detailInfoContents = detailInfoView.findViewById<TextView>(id.food_map_activity_dragLayoutDetailContents_TextView)
+        val detailInfoMainMenuPrices = detailInfoView.findViewById<TextView>(id.food_map_activity_dragLayoutMainMenuPrices_TextView)
+        val detailInfoReviewViewRecyclerView = detailInfoView.findViewById<RecyclerView>(id.food_map_activity_dragLayoutReviewView_RecyclerView)
 
 
 

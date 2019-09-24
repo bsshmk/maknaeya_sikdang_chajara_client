@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/foodRelativeLayout"
+        android:id="@+id/food_map_activity_dragView_RelativeLayout"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -10,7 +10,7 @@
 
 >
     <LinearLayout
-            android:id="@+id/detail_info_window_view_topLayout_LinearLayout"
+            android:id="@+id/food_map_activity_dragLayoutTopLayout_LinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -21,7 +21,7 @@
                 android:text="맛집"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/detail_info_window_view_restaurantName_TextView"/>
+                android:id="@+id/food_map_activity_dragLayoutRestaurantName_TextView"/>
         <TextView
                 android:layout_alignParentRight="true"
                 android:gravity="center"
@@ -29,31 +29,32 @@
                 android:text="4.0"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/detail_info_window_view_restaurantRate_TextView"/>
+                android:id="@+id/food_map_activity_dragLayoutRestaurantRate_TextView"/>
 
 
     </LinearLayout>
     <LinearLayout
-            android:id="@+id/detail_info_window_view_midLayout_LinearLayout"
-            android:layout_width="wrap_content"
+            android:id="@+id/food_map_activity_dragLayoutMidLayout_LinearLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_below="@+id/detail_info_window_view_topLayout_LinearLayout">
+            android:layout_below="@+id/food_map_activity_dragLayoutTopLayout_LinearLayout">
         <ImageView
-                android:id="@+id/detail_info_window_view_foodImage_ImageView"
-                android:layout_width="140dp"
+                android:id="@+id/food_map_activity_dragLayoutFoodImage_ImageView"
+                android:layout_width="match_parent"
                 android:layout_height="140dp"
-                android:src="@drawable/ic_launcher_foreground"/>
+                android:src="@drawable/ic_launcher_foreground"
+                android:layout_weight="1"/>
         <ScrollView
-                android:layout_below="@+id/detail_info_window_view_restaurantNameLine_View"
-                android:layout_width="140dp"
+                android:layout_width="match_parent"
                 android:layout_height="140dp"
                 android:layout_alignParentRight="true"
+                android:layout_weight="1"
         >
             <TextView
                     android:layout_margin="5dp"
                     android:text="text"
-                    android:id="@+id/detail_info_window_view_detailContents_TextView"
+                    android:id="@+id/food_map_activity_dragLayoutDetailContents_TextView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 
@@ -62,18 +63,18 @@
     </LinearLayout>
 
     <TextView
-            android:id="@+id/detail_info_window_view_mainMenuPrices_TextView"
+            android:id="@+id/food_map_activity_dragLayoutMainMenuPrices_TextView"
             android:layout_marginTop="10dp"
             android:text="음식 : 1000원"
-            android:layout_below="@+id/detail_info_window_view_midLayout_LinearLayout"
+            android:layout_below="@+id/food_map_activity_dragLayoutMidLayout_LinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     <androidx.recyclerview.widget.RecyclerView
             android:layout_marginTop="10dp"
-            android:id="@+id/detail_info_window_view_reviewView_RecyclerView"
+            android:id="@+id/food_map_activity_dragLayoutReviewView_RecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/detail_info_window_view_mainMenuPrices_TextView"
+            android:layout_below="@+id/food_map_activity_dragLayoutMainMenuPrices_TextView"
 
 
     />

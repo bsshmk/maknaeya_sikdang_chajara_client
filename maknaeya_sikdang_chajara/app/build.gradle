@@ -70,5 +70,9 @@ dependencies {
     // notice that the compiler version must be the same than our gradle version
     kapt "com.android.databinding:compiler:$android_plugin_version"
 
-
+    //view drag
+    repositories {
+        mavenCentral()
+    }
+    implementation 'com.sothree.slidinguppanel:library:3.4.0'
 }
