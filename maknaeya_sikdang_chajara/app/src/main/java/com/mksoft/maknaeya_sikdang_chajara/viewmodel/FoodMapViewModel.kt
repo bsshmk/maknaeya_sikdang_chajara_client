@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mksoft.maknaeya_sikdang_chajara.App
 import com.mksoft.maknaeya_sikdang_chajara.R.*
+import com.mksoft.maknaeya_sikdang_chajara.api.FoodMapAPI
 import com.mksoft.maknaeya_sikdang_chajara.base.BaseViewModel
 import com.mksoft.maknaeya_sikdang_chajara.model.Restaurant
 import com.mksoft.maknaeya_sikdang_chajara.model.Review
@@ -23,10 +24,17 @@ import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 
 class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
+
+    @Inject
+    lateinit var foodMapAPI: FoodMapAPI
+
 
     private val currentMarkerRestaurantIdList = mutableListOf<String>()//현제 관리되고 있는 레스토랑 id
 
@@ -48,10 +56,25 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
 
     init{
         hiddenSlideView()
-        //초기 위치를 서버에 보내고 그 위치에 맞는 음식점 리스트를 받은 다음 테이블 작성을 해주자.
-        initRestaurantInfo()
-        testStart()
+        testAPI()
     }
+
+
+
+
+    private fun testAPI(){
+        subscription = foodMapAPI.testGetRestaurant()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                restaurantList ->
+                for(item in restaurantList){
+                    restaurantIdAndRestaurant[item.restaurant_id] = item
+                    currentMarkerRestaurantIdList.add(item.restaurant_id)
+                }
+            }
+    }
+
     override fun onCleared() {
         super.onCleared()
         subscription.dispose()
@@ -59,49 +82,11 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
     private fun testStart(){
         //레스토랑 정보를 긁어와서 맵에 넣어야함
         currentMarkerRestaurantIdList.add("1")
-
         currentMarkerRestaurantIdList.add("2")
     }
     fun refreshMarker(){
         FoodMapActivity.getMapFragment().getMapAsync(this)
         //엑티비티가 파괴되고 다시 엑티비티를 만들었을 때 싱크를 맞춰주는 용도
-    }
-    fun clearMarkers(){
-
-        for(id in currentMarkerRestaurantIdList){
-            restaurantIdAndMarker[id]!!.map = null
-        }
-        currentMarkerRestaurantIdList.clear()
-    }//마커를 비우고 -> 필터를 해주고 -> 필터 아이디를 IDList에 넣어주자.
-
-    fun initRestaurantInfo(){
-        val restaurant1 = Restaurant("1", "맛집1", "www.naver.com","육식", "010-1234_1321"
-        ,"4.7", "서울시", "37.5670135", "126.9783740", "https://img.siksinhot.com/place/1463988124958100.png?w=307&h=300&c=Y",
-            "삼겹살","삼겹살 160g - 37000원","130")
-        restaurantIdAndRestaurant["1"] = restaurant1
-        restaurantIdAndReview["1"] = mutableListOf()
-        val restaurant1_review1 = Review("r1", "1", "cmk5432","존맛탱","4.5")
-        val restaurant1_review2 = Review("r2", "1", "bs1112","개 노맛","1")
-        val restaurant1_review3 = Review("r3", "1", "bs1112","개 노맛","1")
-        val restaurant1_review4 = Review("r4", "1", "bs1112","개 노맛","1")
-        val restaurant1_review5 = Review("r5", "1", "bs1112","개 노맛","1")
-
-        restaurantIdAndReview[restaurant1_review1.restaurant_id]!!.add(restaurant1_review1)
-        restaurantIdAndReview[restaurant1_review2.restaurant_id]!!.add(restaurant1_review2)
-        restaurantIdAndReview[restaurant1_review3.restaurant_id]!!.add(restaurant1_review3)
-        restaurantIdAndReview[restaurant1_review4.restaurant_id]!!.add(restaurant1_review4)
-        restaurantIdAndReview[restaurant1_review5.restaurant_id]!!.add(restaurant1_review5)
-
-        val restaurant2 = Restaurant("2", "맛집2", "www.naver.com","육식", "010-1234_1321"
-            ,"4.7", "서울시", "37.565725", "126.977906", "https://img.siksinhot.com/place/1463988124958100.png?w=307&h=300&c=Y",
-            "삼겹살","삼겹살 160g - 37000원","130")
-        restaurantIdAndRestaurant["2"] = restaurant2
-        restaurantIdAndReview["2"] = mutableListOf()
-        val restaurant2_review1 = Review("r3", "2", "cmk","존맛탱2222","4.5")
-        val restaurant2_review2 = Review("r4", "2", "bs112","개 노맛ㅜㅜ","1.5")
-        restaurantIdAndReview[restaurant2_review1.restaurant_id]!!.add(restaurant2_review1)
-        restaurantIdAndReview[restaurant2_review2.restaurant_id]!!.add(restaurant2_review2)
-
     }
     private fun initInfoWind(id:String){
         restaurantIdAndInfoWindow[id] = InfoWindow()
@@ -226,7 +211,8 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
         slideViewRestaurantDetailContents.value = detailContents
         slideViewRestaurantMainMenuPrice.value = restaurantIdAndRestaurant[restaurantId]!!.main_menu
         slideViewRestaurantImageSrc.value = restaurantIdAndRestaurant[restaurantId]!!.image_src
-        reviewListAdapter.updateReviewList(restaurantIdAndReview[restaurantId]!!)
+        if(restaurantIdAndReview[restaurantId] != null)
+            reviewListAdapter.updateReviewList(restaurantIdAndReview[restaurantId]!!)
     }
 }
 

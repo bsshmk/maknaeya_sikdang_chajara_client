@@ -1,6 +1,7 @@
 package com.mksoft.mkjw_second_project.di.module
 
 import android.graphics.Paint
+import com.mksoft.maknaeya_sikdang_chajara.api.FoodMapAPI
 import com.mksoft.maknaeya_sikdang_chajara.utils.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -15,6 +16,12 @@ import javax.inject.Singleton
 @Module
 @Suppress("unused")
 class NetworkModule{
+
+    @Provides
+    @Singleton
+    internal  fun provideFoodMapAPI(retrofit: Retrofit): FoodMapAPI{
+        return retrofit.create(FoodMapAPI::class.java)
+    }
 
 
     //필요한 API여기에 추가
