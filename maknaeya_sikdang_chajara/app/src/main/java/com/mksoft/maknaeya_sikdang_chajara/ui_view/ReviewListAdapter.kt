@@ -9,10 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mksoft.maknaeya_sikdang_chajara.R
 import com.mksoft.maknaeya_sikdang_chajara.model.Review
 import kotlinx.android.synthetic.main.review_view.view.*
+import java.util.*
 
 class ReviewListAdapter : RecyclerView.Adapter<ReviewListAdapter.ReviewViewHolder>(){
 
-    private lateinit var reviewList:List<Review>
+    private var reviewList:List<Review> = Collections.emptyList()
 
     override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
         holder.bind(reviewList[position])
@@ -23,7 +24,7 @@ class ReviewListAdapter : RecyclerView.Adapter<ReviewListAdapter.ReviewViewHolde
     }
 
     override fun getItemCount(): Int {
-        return if(::reviewList.isInitialized) reviewList.size else 0
+        return reviewList.size
     }
 
     fun updateReviewList(reviewList: List<Review>){

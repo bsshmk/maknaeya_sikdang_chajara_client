@@ -1,111 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.sothree.slidinguppanel.SlidingUpPanelLayout
+<layout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:sothree="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/food_map_activity_sliding_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        sothree:umanoPanelHeight="68dp"
-        sothree:umanoShadowHeight="4dp"
-        sothree:umanoParallaxOffset="100dp"
-        sothree:umanoDragView="@+id/food_map_activity_dragView_RelativeLayout"
-        sothree:umanoOverlay="true"
-        sothree:umanoScrollableView="@+id/food_map_activity_dragLayoutReviewView_RecyclerView"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+                name="viewModel"
+                type="com.mksoft.maknaeya_sikdang_chajara.viewmodel.FoodMapViewModel"/>
+    </data>
 
-        >
-    <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        <fragment
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/map"
-                android:name="com.naver.maps.map.MapFragment"
-        />
-
-    </RelativeLayout>
-    <!-- SLIDING LAYOUT -->
-    <RelativeLayout
-            android:id="@+id/food_map_activity_dragView_RelativeLayout"
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+            android:id="@+id/food_map_activity_sliding_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#ffffff"
-
-
-
+            android:gravity="bottom"
+            sothree:umanoPanelHeight="68dp"
+            sothree:umanoShadowHeight="4dp"
+            sothree:umanoParallaxOffset="100dp"
+            sothree:umanoDragView="@+id/food_map_activity_dragView_RelativeLayout"
+            sothree:umanoOverlay="true"
+            sothree:umanoScrollableView="@+id/food_map_activity_dragLayoutReviewView_RecyclerView"
+            app:mutableSlideViewState="@{viewModel.getSlideViewState}"
     >
-        <LinearLayout
-                android:layout_margin="10dp"
-                android:id="@+id/food_map_activity_dragLayoutTopLayout_LinearLayout"
+        <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="68dp"
-                android:orientation="vertical">
-            <TextView
-                    android:gravity="center"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:text="맛집"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/food_map_activity_dragLayoutRestaurantName_TextView"/>
-            <TextView
-                    android:layout_alignParentRight="true"
-                    android:gravity="center"
-                    android:textSize="15dp"
-                    android:text="4.0"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/food_map_activity_dragLayoutRestaurantRate_TextView"/>
-
-
-        </LinearLayout>
-        <LinearLayout
-                android:id="@+id/food_map_activity_dragLayoutMidLayout_LinearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_below="@+id/food_map_activity_dragLayoutTopLayout_LinearLayout">
-            <ImageView
-                    android:id="@+id/food_map_activity_dragLayoutFoodImage_ImageView"
+                android:layout_height="match_parent">
+            <fragment
                     android:layout_width="match_parent"
-                    android:layout_height="140dp"
-                    android:src="@drawable/ic_launcher_foreground"
-                    android:layout_weight="1"/>
-            <ScrollView
-                    android:id="@+id/food_map_activity_dragLayoutScrollView_ScrollView"
-                    android:layout_weight="1"
-                    android:layout_width="match_parent"
-                    android:layout_height="140dp"
-                    android:layout_alignParentRight="true"
-            >
-                <TextView
-                        android:layout_margin="5dp"
-                        android:text="text"
-                        android:id="@+id/food_map_activity_dragLayoutDetailContents_TextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:id="@+id/map"
+                    android:name="com.naver.maps.map.MapFragment"
+            />
 
-            </ScrollView>
-
-        </LinearLayout>
-
-        <TextView
-                android:id="@+id/food_map_activity_dragLayoutMainMenuPrices_TextView"
-                android:layout_marginTop="10dp"
-                android:text="음식 : 1000원"
-                android:layout_below="@+id/food_map_activity_dragLayoutMidLayout_LinearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        <androidx.recyclerview.widget.RecyclerView
-                android:layout_marginTop="10dp"
-                android:id="@+id/food_map_activity_dragLayoutReviewView_RecyclerView"
+        </RelativeLayout>
+        <!-- SLIDING LAYOUT -->
+        <RelativeLayout
+                android:id="@+id/food_map_activity_dragView_RelativeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/food_map_activity_dragLayoutMainMenuPrices_TextView"
+                android:background="#ffffff"
 
 
-        />
+        >
+            <LinearLayout
+                    android:layout_margin="10dp"
+                    android:id="@+id/food_map_activity_dragLayoutTopLayout_LinearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="68dp"
+                    android:orientation="vertical">
+                <TextView
+                        android:gravity="center"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:text="맛집"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/food_map_activity_dragLayoutRestaurantName_TextView"
+                        app:mutableText="@{viewModel.getSlideViewRestaurantName}"/>
+                <TextView
+                        android:layout_alignParentRight="true"
+                        android:gravity="center"
+                        android:textSize="15dp"
+                        android:text="4.0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/food_map_activity_dragLayoutRestaurantRate_TextView"
+                        app:mutableText="@{viewModel.getSlideViewRestaurantRate}"/>
 
-    </RelativeLayout>
-</com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                    android:id="@+id/food_map_activity_dragLayoutMidLayout_LinearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_below="@+id/food_map_activity_dragLayoutTopLayout_LinearLayout">
+                <ImageView
+                        android:id="@+id/food_map_activity_dragLayoutFoodImage_ImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="140dp"
+                        android:src="@drawable/ic_launcher_foreground"
+                        android:layout_weight="1"
+                        app:mutableImage="@{viewModel.getSlideViewRestaurantImageSrc}"/>
+                <ScrollView
+                        android:id="@+id/food_map_activity_dragLayoutScrollView_ScrollView"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="140dp"
+                        android:layout_alignParentRight="true"
+                >
+                    <TextView
+                            android:layout_margin="5dp"
+                            android:text="text"
+                            android:id="@+id/food_map_activity_dragLayoutDetailContents_TextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:mutableText="@{viewModel.getSlideViewRestaurantDetailContents}"/>
+
+                </ScrollView>
+
+            </LinearLayout>
+
+            <TextView
+                    android:id="@+id/food_map_activity_dragLayoutMainMenuPrices_TextView"
+                    android:layout_marginTop="10dp"
+                    android:text="음식 : 1000원"
+                    android:layout_below="@+id/food_map_activity_dragLayoutMidLayout_LinearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:mutableText="@{viewModel.getSlideViewRestaurantMainMenuPrice}"/>
+            <androidx.recyclerview.widget.RecyclerView
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/food_map_activity_dragLayoutReviewView_RecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/food_map_activity_dragLayoutMainMenuPrices_TextView"
+                    app:adapter="@{viewModel.getReviewListAdapter}"
+
+
+            />
+
+        </RelativeLayout>
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+</layout>

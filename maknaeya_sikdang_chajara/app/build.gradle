@@ -75,4 +75,7 @@ dependencies {
         mavenCentral()
     }
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
+    //data binding
+    kapt "com.android.databinding:compiler:$android_plugin_version"
+
 }

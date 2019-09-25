@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.UiThread
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -34,16 +35,20 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
     private val restaurantIdAndReview:HashMap<String, MutableList<Review>> = HashMap()
     private val restaurantIdAndInfoWindow:HashMap<String, InfoWindow> = HashMap()
     val restaurantIdAndSimpleView:HashMap<String, View> = HashMap()//한번 클릭시 보이는 뷰
-    val restaurantIdAndDetailView:HashMap<String, View> = HashMap()
-    //var infoWindowOpenState: Boolean = false
-    var currentOpenInfoWindowRestaurantId:String = ""
-    var currentOpenInfoWindowViewState:Int = 0//뷰의 상태가 심플인지 디테일인지
+    val slideViewState: MutableLiveData<String> = MutableLiveData()
+    private var currentOpenInfoWindowRestaurantId:String = ""
     private lateinit var subscription: Disposable
 
-
+    val slideViewRestaurantName:MutableLiveData<String> = MutableLiveData()
+    val slideViewRestaurantRate:MutableLiveData<String> = MutableLiveData()
+    val slideViewRestaurantDetailContents:MutableLiveData<String> = MutableLiveData()
+    val slideViewRestaurantMainMenuPrice:MutableLiveData<String> = MutableLiveData()
+    val slideViewRestaurantImageSrc:MutableLiveData<String> = MutableLiveData()
+    val reviewListAdapter:ReviewListAdapter = ReviewListAdapter()
 
     init{
-        currentOpenInfoWindowViewState = string.view_state_simple
+        hiddenSlideView()
+        //초기 위치를 서버에 보내고 그 위치에 맞는 음식점 리스트를 받은 다음 테이블 작성을 해주자.
         initRestaurantInfo()
         testStart()
     }
@@ -77,10 +82,17 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
         restaurantIdAndReview["1"] = mutableListOf()
         val restaurant1_review1 = Review("r1", "1", "cmk5432","존맛탱","4.5")
         val restaurant1_review2 = Review("r2", "1", "bs1112","개 노맛","1")
+        val restaurant1_review3 = Review("r3", "1", "bs1112","개 노맛","1")
+        val restaurant1_review4 = Review("r4", "1", "bs1112","개 노맛","1")
+        val restaurant1_review5 = Review("r5", "1", "bs1112","개 노맛","1")
+
         restaurantIdAndReview[restaurant1_review1.restaurant_id]!!.add(restaurant1_review1)
         restaurantIdAndReview[restaurant1_review2.restaurant_id]!!.add(restaurant1_review2)
+        restaurantIdAndReview[restaurant1_review3.restaurant_id]!!.add(restaurant1_review3)
+        restaurantIdAndReview[restaurant1_review4.restaurant_id]!!.add(restaurant1_review4)
+        restaurantIdAndReview[restaurant1_review5.restaurant_id]!!.add(restaurant1_review5)
 
-        val restaurant2 = Restaurant("2", "맛집1", "www.naver.com","육식", "010-1234_1321"
+        val restaurant2 = Restaurant("2", "맛집2", "www.naver.com","육식", "010-1234_1321"
             ,"4.7", "서울시", "37.565725", "126.977906", "https://img.siksinhot.com/place/1463988124958100.png?w=307&h=300&c=Y",
             "삼겹살","삼겹살 160g - 37000원","130")
         restaurantIdAndRestaurant["2"] = restaurant2
@@ -100,9 +112,6 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
 
             override fun getContentView(p0: InfoWindow): View {
 
-                if(currentOpenInfoWindowViewState == string.view_state_detail) {
-                    return restaurantIdAndDetailView[id]!!
-                }
                 return restaurantIdAndSimpleView[id]!!
             }
 
@@ -111,32 +120,7 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
 
 
 
-    @SuppressLint("SetTextI18n")
-    private fun makeDetailInfoView(context:Context, restaurantId:String){
-        val detailInfoView = View.inflate(context, layout.detail_info_window_view, null)
-        val detailInfoTiTle = detailInfoView.findViewById<TextView>(id.food_map_activity_dragLayoutRestaurantName_TextView)
-        val detailInfoImage = detailInfoView.findViewById<ImageView>(id.food_map_activity_dragLayoutFoodImage_ImageView)
-        val detailInfoRate = detailInfoView.findViewById<TextView>(id.food_map_activity_dragLayoutRestaurantRate_TextView)
-        val detailInfoContents = detailInfoView.findViewById<TextView>(id.food_map_activity_dragLayoutDetailContents_TextView)
-        val detailInfoMainMenuPrices = detailInfoView.findViewById<TextView>(id.food_map_activity_dragLayoutMainMenuPrices_TextView)
-        val detailInfoReviewViewRecyclerView = detailInfoView.findViewById<RecyclerView>(id.food_map_activity_dragLayoutReviewView_RecyclerView)
 
-
-
-        detailInfoTiTle.text = restaurantIdAndRestaurant[restaurantId]!!.restaurant_name
-        detailInfoRate.text = restaurantIdAndRestaurant[restaurantId]!!.rating+"점"
-        detailInfoContents.text = restaurantIdAndRestaurant[restaurantId]!!.category+"\n"
-        detailInfoContents.append(restaurantIdAndRestaurant[restaurantId]!!.phone_number+"\n")
-        detailInfoContents.append(restaurantIdAndRestaurant[restaurantId]!!.location)
-        detailInfoMainMenuPrices.text = restaurantIdAndRestaurant[restaurantId]!!.main_menu_price
-        Glide.with(detailInfoView.context).load(restaurantIdAndRestaurant[restaurantId]!!.image_src).into(detailInfoImage)
-        //리뷰 어뎁터 만들기
-        val thisReviewListAdapter = ReviewListAdapter()
-        detailInfoReviewViewRecyclerView.adapter = thisReviewListAdapter
-        detailInfoReviewViewRecyclerView.layoutManager = LinearLayoutManager(detailInfoView.context)
-        thisReviewListAdapter.updateReviewList(restaurantIdAndReview[restaurantId]!!)
-        restaurantIdAndDetailView[restaurantId] = detailInfoView
-    }
 
 
     private fun makeSimpleInfoView(context:Context, restaurantId:String){
@@ -161,7 +145,6 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
                 makeMarker(ID)
                 initInfoWind(ID)
                 makeSimpleInfoView(App.applicationContext(), ID)
-                makeDetailInfoView(App.applicationContext(), ID)
             }
             restaurantIdAndMarker[ID]!!.map = naverMap
 
@@ -170,8 +153,7 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
             if(currentOpenInfoWindowRestaurantId != ""){
                 restaurantIdAndInfoWindow[currentOpenInfoWindowRestaurantId]!!.close()
                 currentOpenInfoWindowRestaurantId = ""
-                currentOpenInfoWindowViewState = string.view_state_simple
-
+                hiddenSlideView()
             }
         }//맵의 다른 부분을 누르면 현재 열려있는 infoWindow창을 close
         //
@@ -189,19 +171,8 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
 
     private fun infoWindowListener(id:String):Overlay.OnClickListener{
         return Overlay.OnClickListener {
-            if(currentOpenInfoWindowViewState == string.view_state_simple){
-                currentOpenInfoWindowViewState = string.view_state_detail
-                restaurantIdAndInfoWindow[id]!!.close()
-                restaurantIdAndInfoWindow[id]!!.open(restaurantIdAndMarker[id]!!)
-
-
-            }else if(currentOpenInfoWindowViewState == string.view_state_detail){
-                currentOpenInfoWindowViewState = string.view_state_simple
-                restaurantIdAndInfoWindow[id]!!.close()//기존에 있는 뷰를 닫아주고 새로운 view를 오픈해줘야한다.
-                restaurantIdAndInfoWindow[id]!!.open(restaurantIdAndMarker[id]!!)
-
-            }
-
+            restaurantIdAndInfoWindow[id]!!.close()//기존에 있는 뷰를 닫아주고 새로운 view를 오픈해줘야한다.
+            hiddenSlideView()
             true
         }
     }//뷰에서의 리스터는 소용이 없다... 그래서 infoWindow로 만들어주자
@@ -214,15 +185,18 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
                 // 현재 마커에 정보 창이 열려있지 않을 경우 엶
                 if(currentOpenInfoWindowRestaurantId != ""){
                     restaurantIdAndInfoWindow[currentOpenInfoWindowRestaurantId]!!.close()
+
                 }
-                currentOpenInfoWindowViewState = string.view_state_simple
+                visibleSlideView()
                 restaurantIdAndInfoWindow[id]!!.open(restaurantIdAndMarker[id]!!)
                 currentOpenInfoWindowRestaurantId = id
+                bindingSlideView(id)
+                //여기에 슬라이드 뷰 바인딩을..
             } else {
                 // 이미 현재 마커에 정보 창이 열려있을 경우 닫음
-                currentOpenInfoWindowViewState = string.view_state_simple
                 restaurantIdAndInfoWindow[id]!!.close()
                 currentOpenInfoWindowRestaurantId = ""
+                hiddenSlideView()
                 //이거 호출하면 맵이 리프래쉬됨
                 //필터를 통하여 남은 음식적으로 리스트로 만들어서 관리
                 //원본 음식점 배열은 유지
@@ -234,6 +208,25 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
         }
     }
 
+    fun hiddenSlideView(){
+        slideViewState.value = "hidden"
 
+    }
+    fun visibleSlideView(){
+        slideViewState.value = "visible"
+
+    }
+    fun bindingSlideView(restaurantId: String){
+
+
+        slideViewRestaurantName.value = restaurantIdAndRestaurant[restaurantId]!!.restaurant_name
+        slideViewRestaurantRate.value = restaurantIdAndRestaurant[restaurantId]!!.rating
+        val detailContents = restaurantIdAndRestaurant[restaurantId]!!.category+"\n"+restaurantIdAndRestaurant[restaurantId]!!.phone_number+"\n"+
+                restaurantIdAndRestaurant[restaurantId]!!.location
+        slideViewRestaurantDetailContents.value = detailContents
+        slideViewRestaurantMainMenuPrice.value = restaurantIdAndRestaurant[restaurantId]!!.main_menu
+        slideViewRestaurantImageSrc.value = restaurantIdAndRestaurant[restaurantId]!!.image_src
+        reviewListAdapter.updateReviewList(restaurantIdAndReview[restaurantId]!!)
+    }
 }
 
