@@ -38,8 +38,10 @@ fun setMutableSlideViewState(view: SlidingUpPanelLayout, state: MutableLiveData<
         state.observe(parentActivity, Observer { value ->
             if (value == "visible") {
                 view.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
-            } else {
+            } else if(value =="hidden"){
                 view.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
+            }else{
+                view.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
             }
         })
     }

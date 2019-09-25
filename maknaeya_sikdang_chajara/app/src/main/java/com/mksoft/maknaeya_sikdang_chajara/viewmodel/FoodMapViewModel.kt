@@ -156,8 +156,7 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
 
     private fun infoWindowListener(id:String):Overlay.OnClickListener{
         return Overlay.OnClickListener {
-            restaurantIdAndInfoWindow[id]!!.close()//기존에 있는 뷰를 닫아주고 새로운 view를 오픈해줘야한다.
-            hiddenSlideView()
+            fullVisibleSlideView()
             true
         }
     }//뷰에서의 리스터는 소용이 없다... 그래서 infoWindow로 만들어주자
@@ -200,6 +199,9 @@ class FoodMapViewModel:BaseViewModel(), OnMapReadyCallback {
     fun visibleSlideView(){
         slideViewState.value = "visible"
 
+    }
+    fun fullVisibleSlideView(){
+        slideViewState.value = "full"
     }
     fun bindingSlideView(restaurantId: String){
 
