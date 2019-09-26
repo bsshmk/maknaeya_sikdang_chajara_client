@@ -25,7 +25,26 @@
         <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+            <androidx.appcompat.widget.Toolbar
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="?attr/colorPrimary"
+                    android:layout_alignParentTop="true"
+                    android:id="@+id/food_map_activity_Toolbar"
+                    android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+                <TextView
+                        android:id="@+id/food_map_activity_title_TextView"
+                        android:text="음식점"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                        android:textStyle="bold"/>
+            </androidx.appcompat.widget.Toolbar>
+
+
             <fragment
+                    android:layout_below="@+id/food_map_activity_Toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/map"

@@ -10,6 +10,7 @@ import com.naver.maps.map.NaverMapSdk
 class App : Application(){
     init{
         instance = this
+
     }
     override fun onCreate() {
         super.onCreate()

@@ -57,6 +57,9 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
     val errorClickLister = View.OnClickListener { testAPI() }
 
+
+
+
     init {
         hiddenSlideView()
         testAPI()
@@ -131,6 +134,9 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
 
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
+        val locationOverlay = naverMap.locationOverlay
+        locationOverlay.isVisible = true
+        
         for (ID in currentMarkerRestaurantIdList) {
             if (restaurantIdAndMarker[ID] == null) {
                 makeMarker(ID)
