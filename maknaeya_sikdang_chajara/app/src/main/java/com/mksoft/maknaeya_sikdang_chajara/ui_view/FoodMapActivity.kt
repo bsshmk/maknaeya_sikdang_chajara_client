@@ -4,10 +4,14 @@ import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.StringRes
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
+import com.mksoft.maknaeya_sikdang_chajara.R
 import com.mksoft.maknaeya_sikdang_chajara.databinding.FoodMapActivityBinding
 import com.mksoft.maknaeya_sikdang_chajara.di.ViewModelFactory
 import com.mksoft.maknaeya_sikdang_chajara.viewmodel.FoodMapViewModel
@@ -26,6 +30,9 @@ class FoodMapActivity : AppCompatActivity() {
 
     private var reviewLayout: SlidingUpPanelLayout? = null
 
+    private var errorSnackbar: Snackbar? = null
+
+
     @SuppressLint("WrongConstant")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +43,9 @@ class FoodMapActivity : AppCompatActivity() {
         foodMapViewModel = ViewModelProviders.of(this, ViewModelFactory()).get(FoodMapViewModel::class.java)
         binding.foodMapActivityDragLayoutReviewViewRecyclerView.layoutManager = LinearLayoutManager(this,  LinearLayoutManager.VERTICAL, false)
         binding.viewModel = foodMapViewModel
+        foodMapViewModel.errorMessage.observe(this, Observer {
+                errorMessage -> if(errorMessage != null) showError(errorMessage) else hideError()
+        })
         foodMapViewModel.refreshMarker()//엑티비티가 파괴될 때 그에 맞는 mapFragment에 marker를 다시 표현하도록...
 
 
@@ -73,6 +83,14 @@ class FoodMapActivity : AppCompatActivity() {
             reviewLayout!!.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
         }
     }//슬라이딩한 페이지 숨기기
+    private fun showError(@StringRes errorMessage:Int){
+        errorSnackbar = Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_INDEFINITE)
+        errorSnackbar?.setAction(R.string.retry, foodMapViewModel.errorClickLister)
+        errorSnackbar?.show()
+    }
 
+    private fun hideError(){
+        errorSnackbar?.dismiss()
+    }
 
 }
