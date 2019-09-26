@@ -3,7 +3,6 @@ package com.mksoft.maknaeya_sikdang_chajara.ui_view
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import androidx.annotation.StringRes
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
@@ -46,7 +45,7 @@ class FoodMapActivity : AppCompatActivity() {
         foodMapViewModel.errorMessage.observe(this, Observer {
                 errorMessage -> if(errorMessage != null) showError(errorMessage) else hideError()
         })
-        foodMapViewModel.refreshMarker()//엑티비티가 파괴될 때 그에 맞는 mapFragment에 marker를 다시 표현하도록...
+        foodMapViewModel.refreshMap()//엑티비티가 파괴될 때 그에 맞는 mapFragment에 marker를 다시 표현하도록...
 
 
 
@@ -85,7 +84,11 @@ class FoodMapActivity : AppCompatActivity() {
     }//슬라이딩한 페이지 숨기기
     private fun showError(@StringRes errorMessage:Int){
         errorSnackbar = Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_INDEFINITE)
-        errorSnackbar?.setAction(R.string.retry, foodMapViewModel.errorClickLister)
+        if(errorMessage == R.string.fail_receive){
+            errorSnackbar?.setAction(R.string.retry, foodMapViewModel.errorClickListerFailReceive)
+        }else if(errorMessage == R.string.deny_permission){
+            errorSnackbar?.setAction(R.string.retry, foodMapViewModel.errorClickListerDenyPermission)
+        }
         errorSnackbar?.show()
     }
 

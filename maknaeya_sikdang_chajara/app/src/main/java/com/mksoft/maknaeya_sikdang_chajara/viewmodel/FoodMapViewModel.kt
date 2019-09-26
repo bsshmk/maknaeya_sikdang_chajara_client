@@ -1,34 +1,34 @@
 package com.mksoft.maknaeya_sikdang_chajara.viewmodel
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.location.Location
+import android.location.LocationManager
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.mksoft.maknaeya_sikdang_chajara.App
-import com.mksoft.maknaeya_sikdang_chajara.R
 import com.mksoft.maknaeya_sikdang_chajara.R.*
 import com.mksoft.maknaeya_sikdang_chajara.api.FoodMapAPI
 import com.mksoft.maknaeya_sikdang_chajara.base.BaseViewModel
-import com.mksoft.maknaeya_sikdang_chajara.model.Restaurant
 import com.mksoft.maknaeya_sikdang_chajara.model.Review
 import com.mksoft.maknaeya_sikdang_chajara.ui_view.FoodMapActivity
 import com.mksoft.maknaeya_sikdang_chajara.ui_view.ReviewListAdapter
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
-import com.naver.maps.map.overlay.InfoWindow
-import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
+import com.tedpark.tedpermission.rx2.TedRx2Permission
+import com.naver.maps.map.overlay.InfoWindow
+import com.naver.maps.map.overlay.Marker
+import com.mksoft.maknaeya_sikdang_chajara.model.Restaurant
+import com.naver.maps.map.CameraUpdate
 
 
 class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
@@ -55,14 +55,16 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     val slideViewRestaurantImageSrc: MutableLiveData<String> = MutableLiveData()
     val reviewListAdapter: ReviewListAdapter = ReviewListAdapter()
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
-    val errorClickLister = View.OnClickListener { testAPI() }
-
-
-
-
+    val errorClickListerFailReceive = View.OnClickListener { testAPI() }
+    val errorClickListerDenyPermission = View.OnClickListener { checkPermission() }
+    val optionButtonVisible: MutableLiveData<Boolean> = MutableLiveData()
+    lateinit var locationManager: LocationManager
+    private var location: Location? = null
     init {
+        checkPermission()
         hiddenSlideView()
-        testAPI()
+        
+
     }
 
 
@@ -92,7 +94,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
         currentMarkerRestaurantIdList.add("2")
     }
 
-    fun refreshMarker() {
+    fun refreshMap() {
         FoodMapActivity.getMapFragment().getMapAsync(this)
         //엑티비티가 파괴되고 다시 엑티비티를 만들었을 때 싱크를 맞춰주는 용도
     }
@@ -135,8 +137,14 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
         val locationOverlay = naverMap.locationOverlay
-        locationOverlay.isVisible = true
-        
+        if(location != null){
+            locationOverlay.position = LatLng(location!!.latitude, location!!.longitude)
+            val cameraUpdate = CameraUpdate.scrollTo(LatLng(location!!.latitude, location!!.longitude))
+            naverMap.moveCamera(cameraUpdate)
+            locationOverlay.isVisible = true
+
+        }
+
         for (ID in currentMarkerRestaurantIdList) {
             if (restaurantIdAndMarker[ID] == null) {
                 makeMarker(ID)
@@ -207,7 +215,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
         }
     }
 
-    fun hiddenSlideView() {
+    private fun hiddenSlideView() {
         slideViewState.value = "hidden"
 
     }
@@ -222,10 +230,31 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     }
 
     private fun failLoadRestaurant() {
-        errorMessage.value = R.string.fail_receive
+        errorMessage.value = com.mksoft.maknaeya_sikdang_chajara.R.string.fail_receive
     }
 
-    fun bindingSlideView(restaurantId: String) {
+    @SuppressLint("MissingPermission")
+    private fun checkPermission(){
+        TedRx2Permission.with(App.applicationContext())
+            .setRationaleTitle("권한 요청")
+            .setRationaleMessage("위치 권한이 필요합니다.") // "we need permission for read contact and find your location"
+            .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+            .request()
+            .subscribe({ tedPermissionResult ->
+                if (tedPermissionResult.isGranted) {
+                    locationManager = App.applicationContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                    location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+                    refreshMap()//권한을 받고 위치 갱신
+                    testAPI()
+                } else {
+                    denyPermission()
+                }
+            }, { })
+    }
+    private fun denyPermission(){
+        errorMessage.value = string.deny_permission
+    }
+    private fun bindingSlideView(restaurantId: String) {
 
 
         slideViewRestaurantName.value = restaurantIdAndRestaurant[restaurantId]!!.restaurant_name

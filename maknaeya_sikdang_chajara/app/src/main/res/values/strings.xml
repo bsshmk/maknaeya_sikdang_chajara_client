@@ -4,4 +4,6 @@
     <string name="view_state_detail">detail</string>
     <string name="retry">다시 불러오기</string>
     <string name="fail_receive">서버로부터 불러오기에 실패하였습니다.</string>
+    <string name="retry_permission">권한 설정하기</string>
+    <string name="deny_permission">위치 권한이 없습니다.</string>
 </resources>

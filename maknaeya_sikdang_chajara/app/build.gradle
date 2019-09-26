@@ -78,5 +78,6 @@ dependencies {
     //data binding
     kapt "com.android.databinding:compiler:$android_plugin_version"
     //권한 라이브러리
-    implementation 'gun0912.ted:tedpermission:2.0.0'
+    implementation 'gun0912.ted:tedpermission-rx2:2.0.0'
+
 }

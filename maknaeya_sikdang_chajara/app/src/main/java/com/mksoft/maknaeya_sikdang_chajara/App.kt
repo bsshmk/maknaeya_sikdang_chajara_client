@@ -8,6 +8,7 @@ import com.naver.maps.map.NaverMapSdk
 
 
 class App : Application(){
+
     init{
         instance = this
 
