@@ -3,6 +3,9 @@ package com.mksoft.maknaeya_sikdang_chajara.ui_view
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
@@ -16,7 +19,7 @@ import com.mksoft.maknaeya_sikdang_chajara.di.ViewModelFactory
 import com.mksoft.maknaeya_sikdang_chajara.viewmodel.FoodMapViewModel
 import com.naver.maps.map.MapFragment
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
-
+import kotlinx.android.synthetic.main.food_map_activity.*
 
 
 class FoodMapActivity : AppCompatActivity() {
@@ -39,6 +42,13 @@ class FoodMapActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, com.mksoft.maknaeya_sikdang_chajara.R.layout.food_map_activity)
         initMapFragment()
         initSlideLayout()
+        initToolbar()
+        initViewModel()
+
+
+    }
+    @SuppressLint("WrongConstant")
+    fun initViewModel(){
         foodMapViewModel = ViewModelProviders.of(this, ViewModelFactory()).get(FoodMapViewModel::class.java)
         binding.foodMapActivityDragLayoutReviewViewRecyclerView.layoutManager = LinearLayoutManager(this,  LinearLayoutManager.VERTICAL, false)
         binding.viewModel = foodMapViewModel
@@ -47,10 +57,12 @@ class FoodMapActivity : AppCompatActivity() {
         })
         foodMapViewModel.refreshMap()//엑티비티가 파괴될 때 그에 맞는 mapFragment에 marker를 다시 표현하도록...
 
-
+    }
+    private fun initToolbar(){
+        setSupportActionBar(food_map_activity_Toolbar)
+        supportActionBar!!.title = null
 
     }
-
     init {
         instance = this
     }
@@ -94,6 +106,23 @@ class FoodMapActivity : AppCompatActivity() {
 
     private fun hideError(){
         errorSnackbar?.dismiss()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+
+        menuInflater.inflate(R.menu.food_map_activity_menu, menu)
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return if(item!!.itemId == R.id.food_map_activity_test1){
+            Toast.makeText(this, "test1Click", Toast.LENGTH_LONG).show()
+            true
+        }else{
+            super.onOptionsItemSelected(item)
+        }
+
     }
 
 }
