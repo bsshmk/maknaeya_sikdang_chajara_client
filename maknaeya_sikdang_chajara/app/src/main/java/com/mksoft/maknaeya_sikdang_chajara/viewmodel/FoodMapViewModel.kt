@@ -6,6 +6,7 @@ import android.content.Context
 import android.location.Location
 import android.location.LocationManager
 import android.view.View
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
@@ -55,11 +56,12 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     val slideViewRestaurantImageSrc: MutableLiveData<String> = MutableLiveData()
     val reviewListAdapter: ReviewListAdapter = ReviewListAdapter()
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
-    val errorClickListerFailReceive = View.OnClickListener { testAPI() }
+    val errorClickListerFailReceive = View.OnClickListener { testAPI(location!!) }
     val errorClickListerDenyPermission = View.OnClickListener { checkPermission() }
     val optionButtonVisible: MutableLiveData<Boolean> = MutableLiveData()
     lateinit var locationManager: LocationManager
     private var location: Location? = null
+    var scrollView:ScrollView? = null
     init {
         checkPermission()
         hiddenSlideView()
@@ -67,17 +69,31 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
 
     }
 
+    private fun testReviewAPI(restaurantId: String){
+        subscription = foodMapAPI.getReview(restaurantId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { reviewList ->
+                    restaurantIdAndReview[restaurantId] = reviewList
 
-    private fun testAPI() {
-        subscription = foodMapAPI.testGetRestaurant()
+                },
+                {  }
+            )
+    }
+    private fun testAPI(location:Location) {
+        subscription = foodMapAPI.getRestaurant(location!!.latitude, location!!.longitude, 1.0)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { restaurantList ->
                     for (item in restaurantList) {
                         restaurantIdAndRestaurant[item.restaurant_id] = item
+                        testReviewAPI(item.restaurant_id)
                         currentMarkerRestaurantIdList.add(item.restaurant_id)
                     }
+                    refreshMap()
+
                 },
                 { failLoadRestaurant() }
             )
@@ -215,18 +231,20 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
         }
     }
 
-    private fun hiddenSlideView() {
+    fun hiddenSlideView() {
         slideViewState.value = "hidden"
 
     }
 
     fun visibleSlideView() {
         slideViewState.value = "visible"
+        scrollView!!.fullScroll(ScrollView.FOCUS_UP)
 
     }
 
     fun fullVisibleSlideView() {
         slideViewState.value = "full"
+        scrollView!!.fullScroll(ScrollView.FOCUS_UP)
     }
 
     private fun failLoadRestaurant() {
@@ -255,7 +273,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
         locationManager = App.applicationContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
         refreshMap()//권한을 받고 위치 갱신
-        testAPI()
+        testAPI(location!!)
     }
     private fun denyPermission(){
         errorMessage.value = string.deny_permission
@@ -273,6 +291,9 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
         slideViewRestaurantImageSrc.value = restaurantIdAndRestaurant[restaurantId]!!.image_src
         if (restaurantIdAndReview[restaurantId] != null)
             reviewListAdapter.updateReviewList(restaurantIdAndReview[restaurantId]!!)
+    }
+    fun initScrollView(scrollView:ScrollView){
+        this.scrollView = scrollView
     }
 }
 

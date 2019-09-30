@@ -8,6 +8,7 @@
 >
 
     <TextView
+            android:textColor="#FFF"
             android:text="사용자 / 4.0"
             android:textStyle="bold"
             android:textSize="15dp"
@@ -15,6 +16,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/review_view_nameAndRate_TextView"/>
     <TextView
+            android:textColor="#FFF"
             android:layout_margin="10dp"
             android:text="내용"
             android:textSize="20dp"
