@@ -233,7 +233,6 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
         errorMessage.value = com.mksoft.maknaeya_sikdang_chajara.R.string.fail_receive
     }
 
-    @SuppressLint("MissingPermission")
     private fun checkPermission(){
         TedRx2Permission.with(App.applicationContext())
             .setRationaleTitle("권한 요청")
@@ -242,14 +241,21 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
             .request()
             .subscribe({ tedPermissionResult ->
                 if (tedPermissionResult.isGranted) {
-                    locationManager = App.applicationContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                    location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-                    refreshMap()//권한을 받고 위치 갱신
-                    testAPI()
+                    initLocationAndCallApi()
                 } else {
                     denyPermission()
                 }
-            }, { })
+            },
+                {
+                    initLocationAndCallApi()
+                })//이미 권한이 허가가 되어 있을 때 여기로 넘어온다.
+    }
+    @SuppressLint("MissingPermission")
+    private fun initLocationAndCallApi(){
+        locationManager = App.applicationContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+        refreshMap()//권한을 받고 위치 갱신
+        testAPI()
     }
     private fun denyPermission(){
         errorMessage.value = string.deny_permission
