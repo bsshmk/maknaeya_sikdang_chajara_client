@@ -233,48 +233,42 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     }
 
     fun hiddenSlideView() {
-        if(scrollView!=null){
-            scrollView!!.isFocusableInTouchMode = true
-            scrollView!!.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
-
-        }
         slideViewState.value = "hidden"
 
     }
 
     fun visibleReviewSlideView() {
-        slideViewHeight.value = 68
         reviewVisible.value = View.VISIBLE
         optionViewVisible.value = View.GONE
         scrollView!!.isFocusableInTouchMode = true
         scrollView!!.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
         slideViewState.value = "visible"
+        slideViewHeight.value = 68
 
     }
     fun visibleOptionSlideView(){
         reviewVisible.value = View.GONE
         optionViewVisible.value = View.VISIBLE
-        slideViewHeight.value = 0
-        scrollView!!.fullScroll(ScrollView.FOCUS_UP)
         scrollView!!.isFocusableInTouchMode = true
         scrollView!!.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
         slideViewState.value = "full"
+        slideViewHeight.value = 0
 
     }
     fun fullVisibleReviewSlideView() {
-        slideViewHeight.value = 68
-
         reviewVisible.value = View.VISIBLE
         optionViewVisible.value = View.GONE
         scrollView!!.isFocusableInTouchMode = true
         scrollView!!.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
         slideViewState.value = "full"
+        slideViewHeight.value = 68
 
     }
 
     fun halfHiddenSlideView(){
 
-        scrollView!!.fullScroll(ScrollView.FOCUS_UP)
+        scrollView!!.isFocusableInTouchMode = true
+        scrollView!!.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
         slideViewState.value = "collapsed"
 
     }

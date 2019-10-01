@@ -15,9 +15,7 @@
             android:layout_height="match_parent"
             android:gravity="bottom"
             sothree:umanoDragView="@+id/food_map_activity_sliding_scrollView"
-
             sothree:umanoOverlay="true"
-
             sothree:umanoScrollableView="@+id/food_map_activity_sliding_scrollView"
             app:mutableSlideViewState="@{viewModel.getSlideViewState}"
             app:mutablePanelHeight="@{viewModel.getSlideViewHeight}"

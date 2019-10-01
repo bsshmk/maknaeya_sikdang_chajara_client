@@ -122,6 +122,7 @@ class FoodMapActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return if(item!!.itemId == R.id.food_map_activity_menu_filter_Button){
             foodMapViewModel.visibleOptionSlideView()
+
             true
         }else{
             super.onOptionsItemSelected(item)
