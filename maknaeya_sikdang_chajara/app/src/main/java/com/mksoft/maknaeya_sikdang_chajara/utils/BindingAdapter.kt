@@ -40,8 +40,10 @@ fun setMutableSlideViewState(view: SlidingUpPanelLayout, state: MutableLiveData<
                 view.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
             } else if(value =="hidden"){
                 view.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
-            }else{
+            }else if(value =="full"){
                 view.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
+            }else if(value == "collapsed"){
+                view.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
             }
         })
     }

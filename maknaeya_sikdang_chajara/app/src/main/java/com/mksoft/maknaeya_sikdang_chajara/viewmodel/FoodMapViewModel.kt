@@ -6,6 +6,7 @@ import android.content.Context
 import android.location.Location
 import android.location.LocationManager
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.annotation.UiThread
@@ -56,9 +57,8 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     val slideViewRestaurantImageSrc: MutableLiveData<String> = MutableLiveData()
     val reviewListAdapter: ReviewListAdapter = ReviewListAdapter()
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
-    val errorClickListerFailReceive = View.OnClickListener { testAPI(location!!) }
+    val errorClickListerFailReceive = View.OnClickListener { getRestaurant(location!!) }
     val errorClickListerDenyPermission = View.OnClickListener { checkPermission() }
-    val optionButtonVisible: MutableLiveData<Boolean> = MutableLiveData()
     lateinit var locationManager: LocationManager
     private var location: Location? = null
     var scrollView:ScrollView? = null
@@ -69,7 +69,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
 
     }
 
-    private fun testReviewAPI(restaurantId: String){
+    private fun getReviewList(restaurantId: String){
         subscription = foodMapAPI.getReview(restaurantId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -81,7 +81,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
                 {  }
             )
     }
-    private fun testAPI(location:Location) {
+    private fun getRestaurant(location:Location) {
         subscription = foodMapAPI.getRestaurant(location!!.latitude, location!!.longitude, 1.0)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -89,7 +89,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
                 { restaurantList ->
                     for (item in restaurantList) {
                         restaurantIdAndRestaurant[item.restaurant_id] = item
-                        testReviewAPI(item.restaurant_id)
+                        getReviewList(item.restaurant_id)
                         currentMarkerRestaurantIdList.add(item.restaurant_id)
                     }
                     refreshMap()
@@ -104,12 +104,6 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
         subscription.dispose()
     }
 
-    private fun testStart() {
-        //레스토랑 정보를 긁어와서 맵에 넣어야함
-        currentMarkerRestaurantIdList.add("1")
-        currentMarkerRestaurantIdList.add("2")
-    }
-
     fun refreshMap() {
         FoodMapActivity.getMapFragment().getMapAsync(this)
         //엑티비티가 파괴되고 다시 엑티비티를 만들었을 때 싱크를 맞춰주는 용도
@@ -117,7 +111,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
 
     private fun initInfoWind(id: String) {
         restaurantIdAndInfoWindow[id] = InfoWindow()
-        restaurantIdAndInfoWindow[id]!!.onClickListener = infoWindowListener(id)
+        restaurantIdAndInfoWindow[id]!!.onClickListener = infoWindowListener()
 
 
         restaurantIdAndInfoWindow[id]!!.adapter = object : InfoWindow.DefaultViewAdapter(App.applicationContext()) {
@@ -144,7 +138,8 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
         simpleInfoRate.text = restaurantIdAndRestaurant[restaurantId]!!.rating + "점"
         simpleInfoReviewCountNumber.text =
             "(" + restaurantIdAndRestaurant[restaurantId]!!.review_count_number + "개" + ")"
-        simpleInfoMainMenu.text = restaurantIdAndRestaurant[restaurantId]!!.main_menu
+
+        simpleInfoMainMenu.text = restaurantIdAndRestaurant[restaurantId]!!.category
 
 
         restaurantIdAndSimpleView[restaurantId] = simpleInfoView
@@ -193,7 +188,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     }
 
 
-    private fun infoWindowListener(id: String): Overlay.OnClickListener {
+    private fun infoWindowListener(): Overlay.OnClickListener {
         return Overlay.OnClickListener {
             fullVisibleSlideView()
             true
@@ -232,21 +227,35 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     }
 
     fun hiddenSlideView() {
+        if(scrollView!=null){
+            scrollView!!.isFocusableInTouchMode = true
+            scrollView!!.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+
+        }
         slideViewState.value = "hidden"
 
     }
 
     fun visibleSlideView() {
+
+        scrollView!!.isFocusableInTouchMode = true
+        scrollView!!.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
         slideViewState.value = "visible"
-        scrollView!!.fullScroll(ScrollView.FOCUS_UP)
 
     }
 
     fun fullVisibleSlideView() {
+        scrollView!!.isFocusableInTouchMode = true
+        scrollView!!.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
         slideViewState.value = "full"
-        scrollView!!.fullScroll(ScrollView.FOCUS_UP)
+
     }
 
+    fun halfHiddenSlideView(){
+        scrollView!!.fullScroll(ScrollView.FOCUS_UP)
+        slideViewState.value = "collapsed"
+
+    }
     private fun failLoadRestaurant() {
         errorMessage.value = com.mksoft.maknaeya_sikdang_chajara.R.string.fail_receive
     }
@@ -273,7 +282,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
         locationManager = App.applicationContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
         refreshMap()//권한을 받고 위치 갱신
-        testAPI(location!!)
+        getRestaurant(location!!)
     }
     private fun denyPermission(){
         errorMessage.value = string.deny_permission

@@ -14,9 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="bottom"
-
             sothree:umanoPanelHeight="68dp"
-            sothree:umanoShadowHeight="4dp"
             sothree:umanoDragView="@+id/food_map_activity_sliding_scrollView"
             sothree:umanoOverlay="true"
             sothree:umanoScrollableView="@+id/food_map_activity_sliding_scrollView"
@@ -143,6 +141,7 @@
                         android:id="@+id/food_map_activity_dragLayoutReviewView_RecyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:focusable="false"
                         android:layout_below="@+id/food_map_activity_dragLayoutMainMenuPrices_TextView"
                         app:adapter="@{viewModel.getReviewListAdapter}"
 

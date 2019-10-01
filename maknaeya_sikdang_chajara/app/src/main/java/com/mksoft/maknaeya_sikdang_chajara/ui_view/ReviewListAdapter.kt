@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.mksoft.maknaeya_sikdang_chajara.R
@@ -32,8 +33,8 @@ class ReviewListAdapter : RecyclerView.Adapter<ReviewListAdapter.ReviewViewHolde
         notifyDataSetChanged()
     }
     inner class ReviewViewHolder(parent:ViewGroup):RecyclerView.ViewHolder( LayoutInflater.from(parent.context).inflate(R.layout.review_view, parent, false)){
-        val nameAndRate = itemView.review_view_nameAndRate_TextView
-        val contents = itemView.review_view_contents_TextView
+        private val nameAndRate = itemView.review_view_nameAndRate_TextView
+        private val contents = itemView.review_view_contents_TextView
         fun bind(review:Review){
             nameAndRate.text = review.writer_id+" / "+ review.review_score
             contents.text = review.review_contents

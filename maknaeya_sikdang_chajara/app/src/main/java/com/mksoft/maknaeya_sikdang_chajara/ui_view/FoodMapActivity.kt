@@ -41,8 +41,7 @@ class FoodMapActivity : AppCompatActivity() {
     @SuppressLint("WrongConstant")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setContentView(com.mksoft.maknaeya_sikdang_chajara.R.layout.food_map_activity)//setContentView를 2번 선언했기 때문이다.
-        binding = DataBindingUtil.setContentView(this, com.mksoft.maknaeya_sikdang_chajara.R.layout.food_map_activity)
+        binding = DataBindingUtil.setContentView(this, R.layout.food_map_activity)
 
         initMapFragment()
         initSlideLayout()
@@ -72,15 +71,15 @@ class FoodMapActivity : AppCompatActivity() {
     }
 
     private fun initSlideLayout() {
-        reviewLayout = findViewById(com.mksoft.maknaeya_sikdang_chajara.R.id.food_map_activity_sliding_layout)
+        reviewLayout = findViewById(R.id.food_map_activity_sliding_layout)
         reviewLayout!!.setFadeOnClickListener { reviewLayout!!.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED }
     }
 
     private fun initMapFragment() {
         fragmentManager = supportFragmentManager
-        mapFragment = fragmentManager.findFragmentById(com.mksoft.maknaeya_sikdang_chajara.R.id.map) as MapFragment?
+        mapFragment = fragmentManager.findFragmentById(R.id.map) as MapFragment?
             ?: MapFragment.newInstance().also {
-                fragmentManager.beginTransaction().add(com.mksoft.maknaeya_sikdang_chajara.R.id.map, it).commit()
+                fragmentManager.beginTransaction().add(R.id.map, it).commit()
             }
 
 
@@ -95,8 +94,7 @@ class FoodMapActivity : AppCompatActivity() {
     }
     override fun onBackPressed() {
         if (reviewLayout != null && (reviewLayout!!.panelState == SlidingUpPanelLayout.PanelState.EXPANDED || reviewLayout!!.panelState == SlidingUpPanelLayout.PanelState.ANCHORED)) {
-            reviewLayout!!.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED)
-            food_map_activity_sliding_scrollView.fullScroll(ScrollView.FOCUS_UP)
+            foodMapViewModel.halfHiddenSlideView()
 
         }
     }//슬라이딩한 페이지 숨기기
