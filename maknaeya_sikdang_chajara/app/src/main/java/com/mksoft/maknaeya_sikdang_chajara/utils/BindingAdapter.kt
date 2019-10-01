@@ -1,5 +1,6 @@
 package com.mksoft.maknaeya_sikdang_chajara.utils
 
+import android.content.res.Resources
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -56,5 +57,22 @@ fun setMutableText(view: TextView, text: MutableLiveData<String>?) {
         text.observe(parentActivity, Observer { value -> view.text = value ?: "" })
     }
 }
+@BindingAdapter("mutableVisibility")
+fun setMutableVisibility(view: View, visibility: MutableLiveData<Int>?) {
+    val parentActivity: AppCompatActivity? = view.getParentActivity()
+    if(parentActivity != null && visibility != null) {
+        visibility.observe(parentActivity, Observer { value -> view.visibility = value?: View.VISIBLE})
+        //MutableLiveData을 쓰는 방법은 옵저브(주인 엑티비티, 변경시 변경된 값 바인딩해주는 옵저버)
+        //그래서 현제 뷰의 부모 엑티비티(주인)가 필요
+    }
+}
 
-
+@BindingAdapter("mutablePanelHeight")
+fun setMutablePanelHeight(view: SlidingUpPanelLayout, panelHeight: MutableLiveData<Int>?){
+    val parentActivity:AppCompatActivity? = view.getParentActivity()
+    if(parentActivity != null && panelHeight!=null){
+        panelHeight.observe(parentActivity, Observer{ value -> view.panelHeight =
+            ((value?:0)* Resources.getSystem().displayMetrics.density).toInt()//dp를 인수로 받고 px로 변환
+        })
+    }
+}//간격 설정

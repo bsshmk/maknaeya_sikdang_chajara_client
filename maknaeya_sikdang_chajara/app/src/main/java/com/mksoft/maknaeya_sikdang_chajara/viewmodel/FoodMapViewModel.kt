@@ -50,6 +50,12 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     private var currentOpenInfoWindowRestaurantId: String = ""
     private lateinit var subscription: Disposable
 
+
+
+    val reviewVisible:MutableLiveData<Int> = MutableLiveData()
+    val optionViewVisible:MutableLiveData<Int> = MutableLiveData()
+    val slideViewHeight:MutableLiveData<Int> = MutableLiveData()
+
     val slideViewRestaurantName: MutableLiveData<String> = MutableLiveData()
     val slideViewRestaurantRate: MutableLiveData<String> = MutableLiveData()
     val slideViewRestaurantDetailContents: MutableLiveData<String> = MutableLiveData()
@@ -190,7 +196,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
 
     private fun infoWindowListener(): Overlay.OnClickListener {
         return Overlay.OnClickListener {
-            fullVisibleSlideView()
+            fullVisibleReviewSlideView()
             true
         }
     }//뷰에서의 리스터는 소용이 없다... 그래서 infoWindow로 만들어주자
@@ -205,7 +211,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
                     restaurantIdAndInfoWindow[currentOpenInfoWindowRestaurantId]!!.close()
 
                 }
-                visibleSlideView()
+                visibleReviewSlideView()
                 restaurantIdAndInfoWindow[id]!!.open(restaurantIdAndMarker[id]!!)
                 currentOpenInfoWindowRestaurantId = id
                 bindingSlideView(id)
@@ -236,15 +242,30 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
 
     }
 
-    fun visibleSlideView() {
-
+    fun visibleReviewSlideView() {
+        slideViewHeight.value = 68
+        reviewVisible.value = View.VISIBLE
+        optionViewVisible.value = View.GONE
         scrollView!!.isFocusableInTouchMode = true
         scrollView!!.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
         slideViewState.value = "visible"
 
     }
+    fun visibleOptionSlideView(){
+        reviewVisible.value = View.GONE
+        optionViewVisible.value = View.VISIBLE
+        slideViewHeight.value = 0
+        scrollView!!.fullScroll(ScrollView.FOCUS_UP)
+        scrollView!!.isFocusableInTouchMode = true
+        scrollView!!.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+        slideViewState.value = "full"
 
-    fun fullVisibleSlideView() {
+    }
+    fun fullVisibleReviewSlideView() {
+        slideViewHeight.value = 68
+
+        reviewVisible.value = View.VISIBLE
+        optionViewVisible.value = View.GONE
         scrollView!!.isFocusableInTouchMode = true
         scrollView!!.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
         slideViewState.value = "full"
@@ -252,6 +273,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     }
 
     fun halfHiddenSlideView(){
+
         scrollView!!.fullScroll(ScrollView.FOCUS_UP)
         slideViewState.value = "collapsed"
 

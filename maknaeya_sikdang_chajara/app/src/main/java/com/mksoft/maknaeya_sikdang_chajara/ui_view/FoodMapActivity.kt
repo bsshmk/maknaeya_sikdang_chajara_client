@@ -120,8 +120,8 @@ class FoodMapActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return if(item!!.itemId == R.id.food_map_activity_test1){
-            Toast.makeText(this, "test1Click", Toast.LENGTH_LONG).show()
+        return if(item!!.itemId == R.id.food_map_activity_menu_filter_Button){
+            foodMapViewModel.visibleOptionSlideView()
             true
         }else{
             super.onOptionsItemSelected(item)
