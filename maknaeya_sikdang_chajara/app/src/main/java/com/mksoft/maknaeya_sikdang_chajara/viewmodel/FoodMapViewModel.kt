@@ -243,7 +243,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
         scrollView!!.isFocusableInTouchMode = true
         scrollView!!.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
         slideViewState.value = "visible"
-        slideViewHeight.value = 68
+        slideViewHeight.value = 58
 
     }
     fun visibleOptionSlideView(){
@@ -261,7 +261,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
         scrollView!!.isFocusableInTouchMode = true
         scrollView!!.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
         slideViewState.value = "full"
-        slideViewHeight.value = 68
+        slideViewHeight.value = 58
 
     }
 

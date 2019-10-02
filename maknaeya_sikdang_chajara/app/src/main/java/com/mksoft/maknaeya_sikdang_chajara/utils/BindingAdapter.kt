@@ -1,10 +1,12 @@
 package com.mksoft.maknaeya_sikdang_chajara.utils
 
 import android.content.res.Resources
+import android.os.Build
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.MutableLiveData
@@ -75,4 +77,13 @@ fun setMutablePanelHeight(view: SlidingUpPanelLayout, panelHeight: MutableLiveDa
             ((value?:0)* Resources.getSystem().displayMetrics.density).toInt()//dp를 인수로 받고 px로 변환
         })
     }
-}//간격 설정
+}
+@RequiresApi(Build.VERSION_CODES.M)
+@BindingAdapter("mutableTextColor")
+fun setMutableTextColor(view: TextView, color: MutableLiveData<Int>?){
+    val parentActivity:AppCompatActivity? = view.getParentActivity()
+    if(parentActivity != null && color!=null){
+        color.observe(parentActivity, Observer{ value -> view.setTextColor(App.applicationContext().getColor(value?:R.color.defaultColor))
+        })
+    }
+}

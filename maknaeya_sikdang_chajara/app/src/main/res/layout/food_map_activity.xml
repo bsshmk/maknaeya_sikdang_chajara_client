@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
+
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:sothree="http://schemas.android.com/apk/res-auto"
         xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
-                name="viewModel"
+                name="foodViewModel"
                 type="com.mksoft.maknaeya_sikdang_chajara.viewmodel.FoodMapViewModel"/>
+        <variable
+                name="optionViewModel"
+                type="com.mksoft.maknaeya_sikdang_chajara.viewmodel.OptionViewModel"/>
     </data>
 
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -17,10 +21,11 @@
             sothree:umanoDragView="@+id/food_map_activity_sliding_scrollView"
             sothree:umanoOverlay="true"
             sothree:umanoScrollableView="@+id/food_map_activity_sliding_scrollView"
-            app:mutableSlideViewState="@{viewModel.getSlideViewState}"
-            app:mutablePanelHeight="@{viewModel.getSlideViewHeight}"
+            app:mutableSlideViewState="@{foodViewModel.getSlideViewState}"
+            app:mutablePanelHeight="@{foodViewModel.getSlideViewHeight}"
     >
         <RelativeLayout
+                android:id="@+id/food_map_activity_background_RelativeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
             <androidx.appcompat.widget.Toolbar
@@ -56,60 +61,268 @@
                 android:id="@+id/food_map_activity_sliding_scrollView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#333333">
+                android:background="#000000">
             <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                 <RelativeLayout
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
                         android:id="@+id/food_map_activity_dragOptionView_RelativeLayout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:mutableVisibility = "@{viewModel.getOptionViewVisible}"
+                        app:mutableVisibility="@{foodViewModel.getOptionViewVisible}"
                 >
+                    <RelativeLayout
+                            android:id="@+id/food_map_activity_dragOptionViewTopLayout_LinearLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="58dp"
+                            android:background="#333333">
+                        <TextView
+                                android:layout_marginLeft="15dp"
+
+                                android:layout_alignParentLeft="true"
+                                android:layout_centerVertical="true"
+
+                                android:gravity="center_vertical"
+                                android:textColor="#FFF"
+                                android:textSize="25dp"
+                                android:textStyle="bold"
+                                android:text="설정"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                        />
+                        <TextView
+                                android:gravity="center"
+                                android:layout_marginRight="20dp"
+                                android:textColor="#008577"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:textStyle="bold"
+                                android:textSize="15dp"
+                                android:text="적용"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/food_map_activity_dragOptionLayoutApplyButton_TextView"
+                        />
+
+
+                    </RelativeLayout>
                     <TextView
-                            android:text="test"
+                            android:layout_marginTop="30dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_below="@+id/food_map_activity_dragOptionViewTopLayout_LinearLayout"
+                            android:textColor="#FFF"
+                            android:id="@+id/food_map_activity_dragOptionLayoutRangeTitle_TextView"
+                            android:text="범위 (km)"
+                            android:textSize="25dp"
+                            android:textStyle="bold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
+                    <LinearLayout
+                            android:layout_marginTop="20dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center"
+                            android:id="@+id/food_map_activity_dragOptionViewRangeLayout_LinearLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_below="@+id/food_map_activity_dragOptionLayoutRangeTitle_TextView"
+                            android:orientation="horizontal"
+                            android:background="@drawable/black_button"
+                            android:layout_centerHorizontal="true">
+                        <TextView
+                                android:id="@+id/food_map_activity_Range0_TextView"
+                                android:gravity="center"
+                                android:text="2.0"
+                                android:textSize="20dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                app:mutableTextColor="@{optionViewModel.getRangeButtonsState[0]}"/>
+                        <TextView
+
+                                android:id="@+id/food_map_activity_Range1_TextView"
+                                app:mutableTextColor="@{optionViewModel.getRangeButtonsState[1]}"
+                                android:gravity="center"
+                                android:text="1.0"
+                                android:textSize="20dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"/>
+                        <TextView
+
+                                android:id="@+id/food_map_activity_Range2_TextView"
+                                app:mutableTextColor="@{optionViewModel.getRangeButtonsState[2]}"
+                                android:textColor="#FFF"
+                                android:gravity="center"
+                                android:text="0.5"
+                                android:textSize="20dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"/>
+                        <TextView
+
+                                android:id="@+id/food_map_activity_Range3_TextView"
+                                app:mutableTextColor="@{optionViewModel.getRangeButtonsState[3]}"
+                                android:gravity="center"
+                                android:text="0.3"
+                                android:textSize="20dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"/>
+
+                    </LinearLayout>
+                    <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_below="@+id/food_map_activity_dragOptionViewRangeLayout_LinearLayout"
+                            android:layout_margin="20dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="#636363" />
+
+                    <TextView
+                            android:layout_marginTop="40dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_below="@+id/food_map_activity_dragOptionViewRangeLayout_LinearLayout"
+                            android:id="@+id/food_map_activity_dragOptionViewFilterTitle_TextView"
+                            android:text="필터"
+                            android:textColor="#fff"
+                            android:textStyle="bold"
+                            android:textSize="25dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    <TextView
+                            android:layout_marginTop="25dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_below="@+id/food_map_activity_dragOptionViewFilterTitle_TextView"
+                            android:textColor="#FFF"
+                            android:id="@+id/food_map_activity_dragOptionLayoutKeywordFilterTitle_TextView"
+                            android:text="키워드"
+                            android:textSize="23dp"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"/>
+                    <EditText
+                            android:theme="@style/EditTheme"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_below="@+id/food_map_activity_dragOptionViewFilterTitle_TextView"
+                            android:layout_toRightOf="@+id/food_map_activity_dragOptionLayoutKeywordFilterTitle_TextView"
+                            android:id="@+id/food_map_activity_dragOptionLayoutKeywordFilterInput_EditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="20dp"
+                            android:hint="ex) 치킨, 존맛..."
+                            android:textColorHint="#B2B2B2"
+                            android:textColor="#fff"
+                            android:lines = "1"/>
+                    <TextView
+                            android:layout_marginTop="25dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_below="@+id/food_map_activity_dragOptionLayoutKeywordFilterTitle_TextView"
+                            android:textColor="#FFF"
+                            android:id="@+id/food_map_activity_dragOptionLayoutRateFilterTitle_TextView"
+                            android:text="점수"
+                            android:textSize="23dp"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"/>
+                    <EditText
+                            android:theme="@style/EditTheme"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_below="@+id/food_map_activity_dragOptionLayoutKeywordFilterTitle_TextView"
+                            android:layout_toRightOf="@+id/food_map_activity_dragOptionLayoutRateFilterTitle_TextView"
+                            android:id="@+id/food_map_activity_dragOptionLayoutRateFilterInput_EditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="20dp"
+                            android:hint="ex) 4.0"
+                            android:textColorHint="#B2B2B2"
+
+                            android:inputType="number"
+                            android:textColor="#fff"
+                            android:lines = "1"/>
+                    <TextView
+                            android:layout_marginTop="25dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_below="@+id/food_map_activity_dragOptionLayoutRateFilterTitle_TextView"
+                            android:textColor="#FFF"
+                            android:id="@+id/food_map_activity_dragOptionLayoutReviewCountFilterTitle_TextView"
+                            android:text="리뷰 수"
+                            android:textSize="23dp"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"/>
+                    <EditText
+                            android:theme="@style/EditTheme"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_below="@+id/food_map_activity_dragOptionLayoutRateFilterTitle_TextView"
+                            android:layout_toRightOf="@+id/food_map_activity_dragOptionLayoutReviewCountFilterTitle_TextView"
+                            android:id="@+id/food_map_activity_dragOptionLayoutReviewCountFilterInput_EditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="20dp"
+                            android:hint="ex) 100"
+                            android:textColorHint="#B2B2B2"
+                            android:textColor="#fff"
+                            android:inputType="numberDecimal"
+                            android:lines = "1"/>
+
                 </RelativeLayout>
+                <!--review layout-->
                 <RelativeLayout
                         android:id="@+id/food_map_activity_dragView_RelativeLayout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:mutableVisibility = "@{viewModel.getReviewVisible}"
+                        app:mutableVisibility="@{foodViewModel.getReviewVisible}"
 
 
                 >
                     <RelativeLayout
                             android:id="@+id/food_map_activity_dragLayoutTopLayout_LinearLayout"
                             android:layout_width="match_parent"
-                            android:layout_height="68dp">
+                            android:layout_height="58dp"
+                            android:background="#333333">
                         <TextView
-                                android:layout_marginLeft="10dp"
+                                android:layout_marginLeft="15dp"
                                 android:gravity="center_vertical"
                                 android:textColor="#FFF"
-                                android:textSize="24sp"
+                                android:textSize="20dp"
                                 android:textStyle="bold"
+                                android:layout_alignParentLeft="true"
+                                android:layout_centerVertical="true"
                                 android:text="맛집"
                                 android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:id="@+id/food_map_activity_dragLayoutRestaurantName_TextView"
-                                app:mutableText="@{viewModel.getSlideViewRestaurantName}"/>
+                                app:mutableText="@{foodViewModel.getSlideViewRestaurantName}"/>
                         <TextView
                                 android:layout_marginRight="20dp"
                                 android:gravity="center_vertical"
                                 android:textColor="#FFF"
                                 android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
                                 android:textSize="15dp"
                                 android:text="4.0"
                                 android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:id="@+id/food_map_activity_dragLayoutRestaurantRate_TextView"
-                                app:mutableText="@{viewModel.getSlideViewRestaurantRate}"/>
+                                app:mutableText="@{foodViewModel.getSlideViewRestaurantRate}"/>
 
 
                     </RelativeLayout>
                     <LinearLayout
+                            android:layout_marginTop="30dp"
                             android:id="@+id/food_map_activity_dragLayoutMidLayout_LinearLayout"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -121,7 +334,7 @@
                                 android:layout_height="140dp"
                                 android:src="@drawable/ic_launcher_foreground"
                                 android:layout_weight="1"
-                                app:mutableImage="@{viewModel.getSlideViewRestaurantImageSrc}"/>
+                                app:mutableImage="@{foodViewModel.getSlideViewRestaurantImageSrc}"/>
                         <ScrollView
                                 android:id="@+id/food_map_activity_dragLayoutScrollView_ScrollView"
                                 android:layout_weight="1"
@@ -136,7 +349,7 @@
                                     android:id="@+id/food_map_activity_dragLayoutDetailContents_TextView"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    app:mutableText="@{viewModel.getSlideViewRestaurantDetailContents}"/>
+                                    app:mutableText="@{foodViewModel.getSlideViewRestaurantDetailContents}"/>
 
                         </ScrollView>
 
@@ -150,7 +363,7 @@
                             android:layout_below="@+id/food_map_activity_dragLayoutMidLayout_LinearLayout"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            app:mutableText="@{viewModel.getSlideViewRestaurantMainMenuPrice}"/>
+                            app:mutableText="@{foodViewModel.getSlideViewRestaurantMainMenuPrice}"/>
                     <androidx.recyclerview.widget.RecyclerView
                             android:layout_margin="10dp"
                             android:id="@+id/food_map_activity_dragLayoutReviewView_RecyclerView"
@@ -158,7 +371,7 @@
                             android:layout_height="match_parent"
                             android:focusable="false"
                             android:layout_below="@+id/food_map_activity_dragLayoutMainMenuPrices_TextView"
-                            app:adapter="@{viewModel.getReviewListAdapter}"
+                            app:adapter="@{foodViewModel.getReviewListAdapter}"
 
 
                     />

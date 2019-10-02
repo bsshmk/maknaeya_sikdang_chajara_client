@@ -6,6 +6,7 @@ import com.mksoft.maknaeya_sikdang_chajara.App
 import com.mksoft.maknaeya_sikdang_chajara.di.AppComponent
 import com.mksoft.maknaeya_sikdang_chajara.di.DaggerAppComponent
 import com.mksoft.maknaeya_sikdang_chajara.viewmodel.FoodMapViewModel
+import com.mksoft.maknaeya_sikdang_chajara.viewmodel.OptionViewModel
 import com.mksoft.mkjw_second_project.di.module.DataBaseModule
 import com.mksoft.mkjw_second_project.di.module.NetworkModule
 
@@ -22,8 +23,9 @@ abstract class BaseViewModel: ViewModel(){
     private fun inject(){
         when(this){
             is FoodMapViewModel -> injector.inject(this)
-
+            is OptionViewModel -> injector.inject(this)
         }
     }
+
 }
 //주입을 위한 베이스 뷰모델

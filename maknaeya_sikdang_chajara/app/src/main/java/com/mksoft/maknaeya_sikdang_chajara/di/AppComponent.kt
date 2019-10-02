@@ -1,6 +1,7 @@
 package com.mksoft.maknaeya_sikdang_chajara.di
 
 import com.mksoft.maknaeya_sikdang_chajara.viewmodel.FoodMapViewModel
+import com.mksoft.maknaeya_sikdang_chajara.viewmodel.OptionViewModel
 import com.mksoft.mkjw_second_project.di.module.DataBaseModule
 import com.mksoft.mkjw_second_project.di.module.NetworkModule
 import dagger.Component
@@ -13,6 +14,7 @@ import javax.inject.Singleton
 )
 interface AppComponent {
     fun inject(foodMapViewModel: FoodMapViewModel)
+    fun inject(optionViewModel: OptionViewModel)
     @Component.Builder
     interface Builder {
         fun build(): AppComponent

@@ -20,7 +20,11 @@
              overflow icon (three vertical dots) -->
         <item name="android:textColorSecondary">@color/abc_secondary_text_material_light</item>
 
-    </style>
 
+    </style>
+    <style name="EditTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorControlNormal">@color/colorPrimaryDark</item>
+    </style>
 
 </resources>

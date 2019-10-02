@@ -4,9 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.ScrollView
+import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.databinding.DataBindingUtil
@@ -15,11 +14,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import com.mksoft.maknaeya_sikdang_chajara.App
 import com.mksoft.maknaeya_sikdang_chajara.R
 import com.mksoft.maknaeya_sikdang_chajara.databinding.FoodMapActivityBinding
 import com.mksoft.maknaeya_sikdang_chajara.di.ViewModelFactory
+import com.mksoft.maknaeya_sikdang_chajara.model.FilterData
 import com.mksoft.maknaeya_sikdang_chajara.viewmodel.FoodMapViewModel
+import com.mksoft.maknaeya_sikdang_chajara.viewmodel.OptionViewModel
 import com.naver.maps.map.MapFragment
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import kotlinx.android.synthetic.main.food_map_activity.*
@@ -30,9 +30,9 @@ class FoodMapActivity : AppCompatActivity() {
     private lateinit var fragmentManager: FragmentManager
     lateinit var mapFragment: MapFragment
     private lateinit var foodMapViewModel: FoodMapViewModel
+    private lateinit var optionViewModel: OptionViewModel
 
     private lateinit var binding: FoodMapActivityBinding
-
     private var reviewLayout: SlidingUpPanelLayout? = null
 
     private var errorSnackbar: Snackbar? = null
@@ -41,20 +41,32 @@ class FoodMapActivity : AppCompatActivity() {
     @SuppressLint("WrongConstant")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)//키보드가 화면을 가릴 때
         binding = DataBindingUtil.setContentView(this, R.layout.food_map_activity)
 
         initMapFragment()
         initSlideLayout()
         initToolbar()
         initViewModel()
-
+        initRangeButtonListener()
+        initApplyButton()
 
     }
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (currentFocus != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+        }
+        return super.dispatchTouchEvent(ev)
+    }//키보드 숨기기
     @SuppressLint("WrongConstant")
     fun initViewModel(){
         foodMapViewModel = ViewModelProviders.of(this, ViewModelFactory()).get(FoodMapViewModel::class.java)
+        optionViewModel = ViewModelProviders.of(this, ViewModelFactory()).get(OptionViewModel::class.java)
+
         binding.foodMapActivityDragLayoutReviewViewRecyclerView.layoutManager = LinearLayoutManager(this,  LinearLayoutManager.VERTICAL, false)
-        binding.viewModel = foodMapViewModel
+        binding.foodViewModel = foodMapViewModel
+        binding.optionViewModel = optionViewModel
         foodMapViewModel.errorMessage.observe(this, Observer {
                 errorMessage -> if(errorMessage != null) showError(errorMessage) else hideError()
         })
@@ -129,6 +141,44 @@ class FoodMapActivity : AppCompatActivity() {
         }
 
     }
+    private fun initApplyButton(){
+        food_map_activity_dragOptionLayoutApplyButton_TextView.setOnClickListener {
+            var rateString = food_map_activity_dragOptionLayoutRateFilterInput_EditText.text.toString()
+            if(rateString.isEmpty()){
+                rateString = "0"
+            }
+            var reviewCount = food_map_activity_dragOptionLayoutReviewCountFilterInput_EditText.text.toString()
+            if(reviewCount.isEmpty()){
+                reviewCount = "0"
+            }
+            val currentFilterState = FilterData(
+                optionViewModel.getRangeValue(),
+                food_map_activity_dragOptionLayoutKeywordFilterInput_EditText.text.toString(),
+                rateString.toDouble(),
+                reviewCount.toInt()
+            )
+            if(rateString.toDouble() in 0.0..5.0){
+                foodMapViewModel.hiddenSlideView()
+                Toast.makeText(this, currentFilterState.toString(), Toast.LENGTH_LONG).show()
+            }else{
+                Toast.makeText(this, "평점은 0~5점 사이로 입력하세요.", Toast.LENGTH_LONG).show()
+            }
 
+        }
+    }
+    private fun initRangeButtonListener(){
+        food_map_activity_Range0_TextView.setOnClickListener {
+            optionViewModel.clickRangeButton(0)
+        }
+        food_map_activity_Range1_TextView.setOnClickListener {
+            optionViewModel.clickRangeButton(1)
+        }
+        food_map_activity_Range2_TextView.setOnClickListener {
+            optionViewModel.clickRangeButton(2)
+        }
+        food_map_activity_Range3_TextView.setOnClickListener {
+            optionViewModel.clickRangeButton(3)
+        }
+    }
 
 }
