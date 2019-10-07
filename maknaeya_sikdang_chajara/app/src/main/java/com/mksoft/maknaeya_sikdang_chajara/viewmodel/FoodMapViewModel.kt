@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import com.mksoft.maknaeya_sikdang_chajara.App
+import com.mksoft.maknaeya_sikdang_chajara.R
 import com.mksoft.maknaeya_sikdang_chajara.R.*
 import com.mksoft.maknaeya_sikdang_chajara.api.FoodMapAPI
 import com.mksoft.maknaeya_sikdang_chajara.base.BaseViewModel
@@ -31,6 +32,7 @@ import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.mksoft.maknaeya_sikdang_chajara.model.Restaurant
 import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.overlay.OverlayImage
 
 
 class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
@@ -39,8 +41,8 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     lateinit var foodMapAPI: FoodMapAPI
 
 
-    private val currentMarkerRestaurantIdList = mutableListOf<String>()//현제 관리되고 있는 레스토랑 id
-
+    private val currentMarkerRestaurantIdList = mutableListOf<String>()//현재 관리되고 있는 레스토랑 id
+    private val totalRestaurantIdList = mutableListOf<String>()
     private val restaurantIdAndRestaurant: HashMap<String, Restaurant> = HashMap()
     private val restaurantIdAndMarker: HashMap<String, Marker> = HashMap()
     private val restaurantIdAndReview: HashMap<String, MutableList<Review>> = HashMap()
@@ -49,6 +51,8 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     val slideViewState: MutableLiveData<String> = MutableLiveData()
     private var currentOpenInfoWindowRestaurantId: String = ""
     private lateinit var subscription: Disposable
+    val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
+    val refreshButtonVisibility: MutableLiveData<Int> = MutableLiveData()
 
 
 
@@ -63,12 +67,13 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     val slideViewRestaurantImageSrc: MutableLiveData<String> = MutableLiveData()
     val reviewListAdapter: ReviewListAdapter = ReviewListAdapter()
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
-    val errorClickListerFailReceive = View.OnClickListener { getRestaurant(location!!) }
+    val errorClickListerFailReceive = View.OnClickListener { initLocationAndCallApi() }
     val errorClickListerDenyPermission = View.OnClickListener { checkPermission() }
     lateinit var locationManager: LocationManager
     private var location: Location? = null
     var scrollView:ScrollView? = null
     init {
+        terminateLoadRefresh()
         checkPermission()
         hiddenSlideView()
         
@@ -91,6 +96,9 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
         subscription = foodMapAPI.getRestaurant(location!!.latitude, location!!.longitude, 1.0)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe{loadRefresh()}
+            .doOnTerminate{terminateLoadRefresh()}
+
             .subscribe(
                 { restaurantList ->
                     for (item in restaurantList) {
@@ -153,6 +161,8 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
 
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
+        naverMap.mapType = NaverMap.MapType.Navi
+
         val locationOverlay = naverMap.locationOverlay
         if(location != null){
             locationOverlay.position = LatLng(location!!.latitude, location!!.longitude)
@@ -188,6 +198,9 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
             restaurantIdAndRestaurant[restaurantId]!!.gps_N.toDouble(),
             restaurantIdAndRestaurant[restaurantId]!!.gps_E.toDouble()
         )
+        marker.icon = OverlayImage.fromResource(R.drawable.dish)
+        marker.width = 70
+        marker.height = 70
         marker.onClickListener = makerListener(restaurantId)
         restaurantIdAndMarker[restaurantId] = marker
 
@@ -294,7 +307,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
                 })//이미 권한이 허가가 되어 있을 때 여기로 넘어온다.
     }
     @SuppressLint("MissingPermission")
-    private fun initLocationAndCallApi(){
+    fun initLocationAndCallApi(){
         locationManager = App.applicationContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
         refreshMap()//권한을 받고 위치 갱신
@@ -320,5 +333,14 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     fun initScrollView(scrollView:ScrollView){
         this.scrollView = scrollView
     }
+    fun terminateLoadRefresh(){
+        loadingVisibility.value =View.GONE
+        refreshButtonVisibility.value = View.VISIBLE
+    }
+    fun loadRefresh(){
+        loadingVisibility.value =View.VISIBLE
+        refreshButtonVisibility.value = View.GONE
+    }
+
 }
 

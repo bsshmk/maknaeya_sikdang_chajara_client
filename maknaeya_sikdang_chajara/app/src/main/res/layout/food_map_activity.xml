@@ -54,6 +54,26 @@
                     android:id="@+id/map"
                     android:name="com.naver.maps.map.MapFragment"
             />
+            <Button
+                    android:id="@+id/food_map_activity_refresh_Button"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/refresh_button"
+                    android:layout_marginRight="13dp"
+                    android:layout_marginBottom="50dp"
+                    app:mutableVisibility = "@{foodViewModel.getRefreshButtonVisibility}"
+            />
+            <ProgressBar
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginRight="13dp"
+                    android:layout_marginBottom="50dp"
+                    app:mutableVisibility="@{foodViewModel.getLoadingVisibility}"/>
+
 
         </RelativeLayout>
         <!-- SLIDING LAYOUT -->
@@ -186,7 +206,7 @@
                             android:layout_marginEnd="10dp"
                             android:layout_marginRight="10dp"
                             android:layout_marginBottom="10dp"
-                            android:background="#636363" />
+                            android:background="#636363"/>
 
                     <TextView
                             android:layout_marginTop="40dp"
@@ -223,7 +243,7 @@
                             android:hint="ex) 치킨, 존맛..."
                             android:textColorHint="#B2B2B2"
                             android:textColor="#fff"
-                            android:lines = "1"/>
+                            android:lines="1"/>
                     <TextView
                             android:layout_marginTop="25dp"
                             android:layout_marginLeft="10dp"
@@ -250,7 +270,7 @@
 
                             android:inputType="number"
                             android:textColor="#fff"
-                            android:lines = "1"/>
+                            android:lines="1"/>
                     <TextView
                             android:layout_marginTop="25dp"
                             android:layout_marginLeft="10dp"
@@ -276,7 +296,7 @@
                             android:textColorHint="#B2B2B2"
                             android:textColor="#fff"
                             android:inputType="numberDecimal"
-                            android:lines = "1"/>
+                            android:lines="1"/>
 
                 </RelativeLayout>
                 <!--review layout-->

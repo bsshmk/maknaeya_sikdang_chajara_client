@@ -50,7 +50,7 @@ class FoodMapActivity : AppCompatActivity() {
         initViewModel()
         initRangeButtonListener()
         initApplyButton()
-
+        initRefreshButton()
     }
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         if (currentFocus != null) {
@@ -178,6 +178,11 @@ class FoodMapActivity : AppCompatActivity() {
         }
         food_map_activity_Range3_TextView.setOnClickListener {
             optionViewModel.clickRangeButton(3)
+        }
+    }
+    private fun initRefreshButton(){
+        food_map_activity_refresh_Button.setOnClickListener {
+            foodMapViewModel.initLocationAndCallApi()
         }
     }
 
