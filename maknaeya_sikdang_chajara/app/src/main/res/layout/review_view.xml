@@ -1,26 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-            android:textColor="#FFF"
-            android:text="사용자 / 4.0"
-            android:textStyle="bold"
-            android:textSize="15dp"
+    <data>
+        <variable
+                name="viewModel"
+                type="com.mksoft.maknaeya_sikdang_chajara.viewmodel.ReviewViewModel" />
+    </data>
+    <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/review_view_nameAndRate_TextView"/>
-    <TextView
-            android:textColor="#FFF"
             android:layout_margin="10dp"
-            android:text="내용"
-            android:textSize="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/review_view_contents_TextView"/>
-</LinearLayout>
+    >
+
+        <TextView
+                android:textColor="#FFF"
+                android:text="사용자 / 4.0"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/review_view_nameAndRate_TextView"
+                app:mutableText="@{viewModel.getNameAndRate()}"/>
+        <TextView
+                android:textColor="#FFF"
+                android:layout_margin="10dp"
+                android:text="내용"
+                android:textSize="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/review_view_contents_TextView"
+                app:mutableText="@{viewModel.getContents()}"/>
+    </LinearLayout>
+
+</layout>

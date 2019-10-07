@@ -8,7 +8,9 @@ import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.mksoft.maknaeya_sikdang_chajara.R
+import com.mksoft.maknaeya_sikdang_chajara.databinding.ReviewViewBinding
 import com.mksoft.maknaeya_sikdang_chajara.model.Review
+import com.mksoft.maknaeya_sikdang_chajara.viewmodel.ReviewViewModel
 import kotlinx.android.synthetic.main.review_view.view.*
 import java.util.*
 
@@ -21,7 +23,8 @@ class ReviewListAdapter : RecyclerView.Adapter<ReviewListAdapter.ReviewViewHolde
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewListAdapter.ReviewViewHolder {
-        return ReviewViewHolder(parent)
+        val binding: ReviewViewBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.review_view, parent, false)
+        return ReviewViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
@@ -32,12 +35,11 @@ class ReviewListAdapter : RecyclerView.Adapter<ReviewListAdapter.ReviewViewHolde
         this.reviewList = reviewList
         notifyDataSetChanged()
     }
-    inner class ReviewViewHolder(parent:ViewGroup):RecyclerView.ViewHolder( LayoutInflater.from(parent.context).inflate(R.layout.review_view, parent, false)){
-        private val nameAndRate = itemView.review_view_nameAndRate_TextView
-        private val contents = itemView.review_view_contents_TextView
+    inner class ReviewViewHolder(private val binding:ReviewViewBinding):RecyclerView.ViewHolder(binding.root){
+        private val viewModel = ReviewViewModel()
         fun bind(review:Review){
-            nameAndRate.text = review.writer_id+" / "+ review.review_score
-            contents.text = review.review_contents
+            viewModel.bind(review)
+            binding.viewModel = viewModel
         }
     }
 

@@ -266,7 +266,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     }
 
     fun halfHiddenSlideView(){
-
+        scrollView!!.fullScroll(ScrollView.FOCUS_UP)
         scrollView!!.isFocusableInTouchMode = true
         scrollView!!.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
         slideViewState.value = "collapsed"

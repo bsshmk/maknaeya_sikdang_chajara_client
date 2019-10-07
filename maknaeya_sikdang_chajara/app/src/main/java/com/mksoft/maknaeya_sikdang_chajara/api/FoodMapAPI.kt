@@ -5,8 +5,12 @@ import com.mksoft.maknaeya_sikdang_chajara.model.Review
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Query
+import com.squareup.moshi.JsonQualifier
+
+
 
 interface FoodMapAPI {
+
     @GET("/restaurant/distByLoc")
     fun getRestaurant(
         @Query("gps_N") gps_N: Double,
