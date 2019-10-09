@@ -16,5 +16,6 @@ data class Restaurant(
     val image_src:String,
     val main_menu:String,
     val main_menu_price:String,
-    val review_count_number:String
+    val review_count_number:String,
+    val distance:Double
 )
