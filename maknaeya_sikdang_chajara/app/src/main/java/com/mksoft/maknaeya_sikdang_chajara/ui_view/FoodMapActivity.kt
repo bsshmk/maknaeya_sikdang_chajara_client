@@ -159,7 +159,7 @@ class FoodMapActivity : AppCompatActivity() {
             )
             if(rateString.toDouble() in 0.0..5.0){
                 foodMapViewModel.hiddenSlideView()
-                Toast.makeText(this, currentFilterState.toString(), Toast.LENGTH_LONG).show()
+                foodMapViewModel.restaurantFilter(currentFilterState)
             }else{
                 Toast.makeText(this, "평점은 0~5점 사이로 입력하세요.", Toast.LENGTH_LONG).show()
             }

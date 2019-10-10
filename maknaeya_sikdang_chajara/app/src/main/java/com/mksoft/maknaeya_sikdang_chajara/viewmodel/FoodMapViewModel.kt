@@ -16,6 +16,7 @@ import com.mksoft.maknaeya_sikdang_chajara.R
 import com.mksoft.maknaeya_sikdang_chajara.R.*
 import com.mksoft.maknaeya_sikdang_chajara.api.FoodMapAPI
 import com.mksoft.maknaeya_sikdang_chajara.base.BaseViewModel
+import com.mksoft.maknaeya_sikdang_chajara.model.FilterData
 import com.mksoft.maknaeya_sikdang_chajara.model.Review
 import com.mksoft.maknaeya_sikdang_chajara.ui_view.FoodMapActivity
 import com.mksoft.maknaeya_sikdang_chajara.ui_view.ReviewListAdapter
@@ -31,6 +32,7 @@ import com.tedpark.tedpermission.rx2.TedRx2Permission
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.mksoft.maknaeya_sikdang_chajara.model.Restaurant
+import com.mksoft.maknaeya_sikdang_chajara.utils.Filtering
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.overlay.OverlayImage
 
@@ -41,7 +43,8 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     lateinit var foodMapAPI: FoodMapAPI
 
 
-    private val currentMarkerRestaurantIdList = mutableListOf<String>()//현재 관리되고 있는 레스토랑 id
+    private var currentMarkerRestaurantIdList = mutableListOf<String>()//현재 관리되고 있는 레스토랑 id
+    private var preMarkerRestaurantIdList = mutableListOf<String>()
     private val totalRestaurantIdList = mutableListOf<String>()
     private val restaurantIdAndRestaurant: HashMap<String, Restaurant> = HashMap()
     private val restaurantIdAndMarker: HashMap<String, Marker> = HashMap()
@@ -104,9 +107,8 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
                     for (item in restaurantList) {
                         restaurantIdAndRestaurant[item.restaurant_id] = item
                         getReviewList(item.restaurant_id)
-                        currentMarkerRestaurantIdList.add(item.restaurant_id)
+                        totalRestaurantIdList.add(item.restaurant_id)
                     }
-                    refreshMap()
 
                 },
                 { failLoadRestaurant() }
@@ -163,6 +165,12 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     override fun onMapReady(naverMap: NaverMap) {
         naverMap.mapType = NaverMap.MapType.Navi
 
+        for (ID in preMarkerRestaurantIdList) {
+
+            restaurantIdAndMarker[ID]!!.map = null
+
+        }
+        preMarkerRestaurantIdList.clear()
         val locationOverlay = naverMap.locationOverlay
         if(location != null){
             locationOverlay.position = LatLng(location!!.latitude, location!!.longitude)
@@ -340,6 +348,12 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     fun loadRefresh(){
         loadingVisibility.value =View.VISIBLE
         refreshButtonVisibility.value = View.GONE
+    }
+    fun restaurantFilter(filterData: FilterData){
+        preMarkerRestaurantIdList = currentMarkerRestaurantIdList
+        currentMarkerRestaurantIdList = Filtering(restaurantIdAndRestaurant, restaurantIdAndReview, filterData)
+        refreshMap()
+
     }
 
 }
