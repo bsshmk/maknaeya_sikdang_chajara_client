@@ -12,20 +12,33 @@ import com.mksoft.maknaeya_sikdang_chajara.model.Review
         var ret = mutableListOf<String>()
 
         val range = filters.range
-        val keyword = filters.keyword
+        val keyword = filters.keyword.toString()
         val rating = filters.rate!!.toDouble()
         val reviewCount = filters.reviewCount!!.toInt()
 
         for (elem in restaurants){
 
             val e = elem.value
-            var temp_str = ""
 
             if(e.distance <= range!!){
                 if(e.rating.toDouble() >= rating){
                     if(e.review_count_number.toInt() >= reviewCount){
 
-                        ret.add(elem.key)
+                        var dummyStr = ""
+                        if(keyword.length > 0) {
+                            if (reviews[elem.key] != null) {
+
+                                for (rev in reviews[elem.key].orEmpty()) {
+                                    dummyStr += rev
+                                }
+                                if (dummyStr.contains(keyword)) {
+                                    ret.add(elem.key)
+                                }
+                            }
+                        }
+                        else{
+                            ret.add(elem.key)
+                        }
 
                         // keyword 확인 options
                         // 1. String.contains 사용
