@@ -55,3 +55,5 @@
  refresh button 클릭시 현재 사용자 위치 기반으로 갱신
  
  
+### Demo
+<img src="https://github.com/bsshmk/maknaeya_sikdang_chajara_client/blob/master/Demo/test.gif" alt="alt text" width="250px" height="500px">
