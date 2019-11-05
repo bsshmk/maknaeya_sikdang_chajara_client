@@ -1,5 +1,6 @@
 package com.mksoft.maknaeya_sikdang_chajara.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mksoft.maknaeya_sikdang_chajara.R
 import com.mksoft.maknaeya_sikdang_chajara.base.BaseViewModel
@@ -73,7 +74,7 @@ class OptionViewModel : BaseViewModel(){
             .subscribe (
                 {optionState ->
                     clickRangeButton(optionState!!)}
-                ,{}
+                ,{err -> Log.d("initOptionState", err.toString())}
             )
     }
 

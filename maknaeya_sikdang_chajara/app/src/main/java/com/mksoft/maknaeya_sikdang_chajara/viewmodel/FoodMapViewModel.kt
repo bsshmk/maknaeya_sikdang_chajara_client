@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
 import android.location.LocationManager
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
@@ -46,16 +47,19 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     private var currentMarkerRestaurantIdList = mutableListOf<String>()//현재 관리되고 있는 레스토랑 id
     private var preMarkerRestaurantIdList = mutableListOf<String>()
     private val totalRestaurantIdList = mutableListOf<String>()
+
     private val restaurantIdAndRestaurant: HashMap<String, Restaurant> = HashMap()
     private val restaurantIdAndMarker: HashMap<String, Marker> = HashMap()
     private val restaurantIdAndReview: HashMap<String, MutableList<Review>> = HashMap()
     private val restaurantIdAndInfoWindow: HashMap<String, InfoWindow> = HashMap()
     val restaurantIdAndSimpleView: HashMap<String, View> = HashMap()//한번 클릭시 보이는 뷰
-    val slideViewState: MutableLiveData<String> = MutableLiveData()
+
     private var currentOpenInfoWindowRestaurantId: String = ""
     private lateinit var subscription: Disposable
+
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
     val refreshButtonVisibility: MutableLiveData<Int> = MutableLiveData()
+    val slideViewState: MutableLiveData<String> = MutableLiveData()
 
 
 
@@ -75,6 +79,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     lateinit var locationManager: LocationManager
     private var location: Location? = null
     var scrollView:ScrollView? = null
+
     init {
         terminateLoadRefresh()
         checkPermission()
@@ -92,11 +97,11 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
                     restaurantIdAndReview[restaurantId] = reviewList
 
                 },
-                {  }
+                { err -> Log.d("getReviewList", err.toString())}
             )
     }
     private fun getRestaurant(location:Location) {
-        subscription = foodMapAPI.getRestaurant(location!!.latitude, location!!.longitude, 1.0)
+        subscription = foodMapAPI.getRestaurant(location!!.latitude, location!!.longitude, 2.0)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe{loadRefresh()}
@@ -111,7 +116,8 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
                     }
 
                 },
-                { failLoadRestaurant() }
+                { err-> Log.d("getRestaurant", err.toString())
+                    failLoadRestaurant() }
             )
     }
 
@@ -311,6 +317,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
                 }
             },
                 {
+                    err-> Log.d("checkPermission",  err.toString())
                     initLocationAndCallApi()
                 })//이미 권한이 허가가 되어 있을 때 여기로 넘어온다.
     }
