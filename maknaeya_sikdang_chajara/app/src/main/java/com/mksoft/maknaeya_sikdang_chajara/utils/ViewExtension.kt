@@ -4,7 +4,7 @@ import android.content.ContextWrapper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 
-fun View.getParentActivity(): AppCompatActivity?{
+fun View.getParentActivity(): AppCompatActivity? {
     var context = this.context//이건 무엇을 의미할까? 어디에서의 this일까?
 
     while (context is ContextWrapper) {

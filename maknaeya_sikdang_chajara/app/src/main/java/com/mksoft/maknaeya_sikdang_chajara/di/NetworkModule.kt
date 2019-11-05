@@ -15,11 +15,11 @@ import javax.inject.Singleton
 
 @Module
 @Suppress("unused")
-class NetworkModule{
+class NetworkModule {
 
     @Provides
     @Singleton
-    internal  fun provideFoodMapAPI(retrofit: Retrofit): FoodMapAPI{
+    internal fun provideFoodMapAPI(retrofit: Retrofit): FoodMapAPI {
         return retrofit.create(FoodMapAPI::class.java)
     }
 
@@ -28,14 +28,15 @@ class NetworkModule{
     @Provides
     @Singleton
     internal fun provideLogging(): HttpLoggingInterceptor {
-        var logging:HttpLoggingInterceptor =  HttpLoggingInterceptor()
+        var logging: HttpLoggingInterceptor = HttpLoggingInterceptor()
         logging.setLevel(HttpLoggingInterceptor.Level.BODY)
         return logging
     }
+
     @Provides
     @Singleton
-    internal fun provideHttpClient(logging :HttpLoggingInterceptor): OkHttpClient.Builder {
-        var httpClient:OkHttpClient.Builder = OkHttpClient.Builder()
+    internal fun provideHttpClient(logging: HttpLoggingInterceptor): OkHttpClient.Builder {
+        var httpClient: OkHttpClient.Builder = OkHttpClient.Builder()
         httpClient.addInterceptor(logging)
         return httpClient
     }
@@ -43,7 +44,7 @@ class NetworkModule{
 
     @Provides
     @Singleton
-    internal fun provideRetrofitInterface(httpClient:OkHttpClient.Builder):Retrofit{
+    internal fun provideRetrofitInterface(httpClient: OkHttpClient.Builder): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create())

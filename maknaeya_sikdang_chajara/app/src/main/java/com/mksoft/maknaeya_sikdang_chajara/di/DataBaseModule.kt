@@ -9,7 +9,7 @@ import javax.inject.Singleton
 
 @Module
 @Suppress("unused")
-class DataBaseModule(private val applicationContext: Application){
+class DataBaseModule(private val applicationContext: Application) {
 
     @Provides
     @Singleton
@@ -17,7 +17,7 @@ class DataBaseModule(private val applicationContext: Application){
 
     @Provides
     @Singleton
-    internal  fun provideAppDataBase(applicationContext: Application): AppDataBase {
+    internal fun provideAppDataBase(applicationContext: Application): AppDataBase {
         return Room.databaseBuilder(applicationContext, AppDataBase::class.java, "r.db").build()
     }
 

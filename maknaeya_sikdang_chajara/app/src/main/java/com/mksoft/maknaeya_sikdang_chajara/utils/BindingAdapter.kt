@@ -20,18 +20,18 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout
 @BindingAdapter("adapter")
 fun setAdapter(view: RecyclerView, adapter: RecyclerView.Adapter<*>) {
     view.adapter = adapter
-}
+}//어뎁터 바인딩
 
 
 @BindingAdapter("mutableImage")
-fun setImage(view: ImageView, imageSrc:MutableLiveData<String>?){
+fun setImage(view: ImageView, imageSrc: MutableLiveData<String>?) {
     val parentActivity: AppCompatActivity? = view.getParentActivity()
     if (parentActivity != null && imageSrc != null) {
         imageSrc.observe(parentActivity, Observer { value ->
             Glide.with(App.applicationContext()).load(value).into(view)
         })
     }
-}
+}//이미지 바인딩
 
 
 @BindingAdapter("mutableSlideViewState")
@@ -41,16 +41,16 @@ fun setMutableSlideViewState(view: SlidingUpPanelLayout, state: MutableLiveData<
         state.observe(parentActivity, Observer { value ->
             if (value == "visible") {
                 view.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
-            } else if(value =="hidden"){
+            } else if (value == "hidden") {
                 view.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
-            }else if(value =="full"){
+            } else if (value == "full") {
                 view.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
-            }else if(value == "collapsed"){
+            } else if (value == "collapsed") {
                 view.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
             }
         })
     }
-}
+}//슬라이드 뷰 크기 바인딩
 
 @BindingAdapter("mutableText")
 fun setMutableText(view: TextView, text: MutableLiveData<String>?) {
@@ -58,32 +58,39 @@ fun setMutableText(view: TextView, text: MutableLiveData<String>?) {
     if (parentActivity != null && text != null) {
         text.observe(parentActivity, Observer { value -> view.text = value ?: "" })
     }
-}
+}//텍스트 바인딩
+
 @BindingAdapter("mutableVisibility")
 fun setMutableVisibility(view: View, visibility: MutableLiveData<Int>?) {
     val parentActivity: AppCompatActivity? = view.getParentActivity()
-    if(parentActivity != null && visibility != null) {
-        visibility.observe(parentActivity, Observer { value -> view.visibility = value?: View.VISIBLE})
+    if (parentActivity != null && visibility != null) {
+        visibility.observe(
+            parentActivity,
+            Observer { value -> view.visibility = value ?: View.VISIBLE })
         //MutableLiveData을 쓰는 방법은 옵저브(주인 엑티비티, 변경시 변경된 값 바인딩해주는 옵저버)
         //그래서 현제 뷰의 부모 엑티비티(주인)가 필요
     }
-}
+}//view visibility 상태 바인딩
 
 @BindingAdapter("mutablePanelHeight")
-fun setMutablePanelHeight(view: SlidingUpPanelLayout, panelHeight: MutableLiveData<Int>?){
-    val parentActivity:AppCompatActivity? = view.getParentActivity()
-    if(parentActivity != null && panelHeight!=null){
-        panelHeight.observe(parentActivity, Observer{ value -> view.panelHeight =
-            ((value?:0)* Resources.getSystem().displayMetrics.density).toInt()//dp를 인수로 받고 px로 변환
+fun setMutablePanelHeight(view: SlidingUpPanelLayout, panelHeight: MutableLiveData<Int>?) {
+    val parentActivity: AppCompatActivity? = view.getParentActivity()
+    if (parentActivity != null && panelHeight != null) {
+        panelHeight.observe(parentActivity, Observer { value ->
+            view.panelHeight =
+                ((value
+                    ?: 0) * Resources.getSystem().displayMetrics.density).toInt()//dp를 인수로 받고 px로 변환
         })
     }
-}
+}//view 높이 바인딩
+
 @RequiresApi(Build.VERSION_CODES.M)
 @BindingAdapter("mutableTextColor")
-fun setMutableTextColor(view: TextView, color: MutableLiveData<Int>?){
-    val parentActivity:AppCompatActivity? = view.getParentActivity()
-    if(parentActivity != null && color!=null){
-        color.observe(parentActivity, Observer{ value -> view.setTextColor(App.applicationContext().getColor(value?:R.color.defaultColor))
+fun setMutableTextColor(view: TextView, color: MutableLiveData<Int>?) {
+    val parentActivity: AppCompatActivity? = view.getParentActivity()
+    if (parentActivity != null && color != null) {
+        color.observe(parentActivity, Observer { value ->
+            view.setTextColor(App.applicationContext().getColor(value ?: R.color.defaultColor))
         })
     }
-}
+}// view color 바인딩

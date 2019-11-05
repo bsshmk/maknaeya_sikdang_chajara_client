@@ -41,9 +41,7 @@ class FoodMapActivity : AppCompatActivity() {
     @SuppressLint("WrongConstant")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)//키보드가 화면을 가릴 때
         binding = DataBindingUtil.setContentView(this, R.layout.food_map_activity)
-
         initMapFragment()
         initSlideLayout()
         initToolbar()
@@ -52,40 +50,50 @@ class FoodMapActivity : AppCompatActivity() {
         initApplyButton()
         initRefreshButton()
     }
+
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)//키보드가 화면을 가릴 때
         if (currentFocus != null) {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
         }
         return super.dispatchTouchEvent(ev)
     }//키보드 숨기기
-    @SuppressLint("WrongConstant")
-    fun initViewModel(){
-        foodMapViewModel = ViewModelProviders.of(this, ViewModelFactory()).get(FoodMapViewModel::class.java)
-        optionViewModel = ViewModelProviders.of(this, ViewModelFactory()).get(OptionViewModel::class.java)
 
-        binding.foodMapActivityDragLayoutReviewViewRecyclerView.layoutManager = LinearLayoutManager(this,  LinearLayoutManager.VERTICAL, false)
+    @SuppressLint("WrongConstant")
+    fun initViewModel() {
+        foodMapViewModel =
+            ViewModelProviders.of(this, ViewModelFactory()).get(FoodMapViewModel::class.java)
+        optionViewModel =
+            ViewModelProviders.of(this, ViewModelFactory()).get(OptionViewModel::class.java)
+
+        binding.foodMapActivityDragLayoutReviewViewRecyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.foodViewModel = foodMapViewModel
         binding.optionViewModel = optionViewModel
-        foodMapViewModel.errorMessage.observe(this, Observer {
-                errorMessage -> if(errorMessage != null) showError(errorMessage) else hideError()
+        foodMapViewModel.errorMessage.observe(this, Observer { errorMessage ->
+            if (errorMessage != null) showError(errorMessage) else hideError()
         })
         foodMapViewModel.refreshMap()//엑티비티가 파괴될 때 그에 맞는 mapFragment에 marker를 다시 표현하도록...
         foodMapViewModel.initScrollView(food_map_activity_sliding_scrollView)
-    }
-    private fun initToolbar(){
+    }//viewmodel초기화
+
+    private fun initToolbar() {
         setSupportActionBar(food_map_activity_Toolbar)
         supportActionBar!!.title = null
 
-    }
+    }//툴바 초기화
+
     init {
         instance = this
     }
 
     private fun initSlideLayout() {
         reviewLayout = findViewById(R.id.food_map_activity_sliding_layout)
-        reviewLayout!!.setFadeOnClickListener { reviewLayout!!.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED }
-    }
+        reviewLayout!!.setFadeOnClickListener {
+            reviewLayout!!.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+        }
+    }//슬라이드 뷰 숨기상태로 초기화
 
     private fun initMapFragment() {
         fragmentManager = supportFragmentManager
@@ -95,7 +103,7 @@ class FoodMapActivity : AppCompatActivity() {
             }
 
 
-    }
+    }//지도 초기화
 
     companion object {
         private var instance: FoodMapActivity? = null
@@ -104,23 +112,28 @@ class FoodMapActivity : AppCompatActivity() {
         }
 
     }
+
     override fun onBackPressed() {
         if (reviewLayout != null && (reviewLayout!!.panelState == SlidingUpPanelLayout.PanelState.EXPANDED || reviewLayout!!.panelState == SlidingUpPanelLayout.PanelState.ANCHORED)) {
             foodMapViewModel.halfHiddenSlideView()
 
         }
     }//슬라이딩한 페이지 숨기기
-    private fun showError(@StringRes errorMessage:Int){
+
+    private fun showError(@StringRes errorMessage: Int) {
         errorSnackbar = Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_INDEFINITE)
-        if(errorMessage == R.string.fail_receive){
+        if (errorMessage == R.string.fail_receive) {
             errorSnackbar?.setAction(R.string.retry, foodMapViewModel.errorClickListerFailReceive)
-        }else if(errorMessage == R.string.deny_permission){
-            errorSnackbar?.setAction(R.string.retry, foodMapViewModel.errorClickListerDenyPermission)
+        } else if (errorMessage == R.string.deny_permission) {
+            errorSnackbar?.setAction(
+                R.string.retry,
+                foodMapViewModel.errorClickListerDenyPermission
+            )
         }
         errorSnackbar?.show()
-    }
+    }//서버로 부터 요청 실패시 스넥바 표시
 
-    private fun hideError(){
+    private fun hideError() {
         errorSnackbar?.dismiss()
     }
 
@@ -129,26 +142,29 @@ class FoodMapActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.food_map_activity_menu, menu)
 
         return true
-    }
+    }//menu inflate
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return if(item!!.itemId == R.id.food_map_activity_menu_filter_Button){
+        return if (item!!.itemId == R.id.food_map_activity_menu_filter_Button) {
             foodMapViewModel.visibleOptionSlideView()
 
             true
-        }else{
+        } else {
             super.onOptionsItemSelected(item)
         }
 
-    }
-    private fun initApplyButton(){
+    }//menu selector 초기화
+
+    private fun initApplyButton() {
         food_map_activity_dragOptionLayoutApplyButton_TextView.setOnClickListener {
-            var rateString = food_map_activity_dragOptionLayoutRateFilterInput_EditText.text.toString()
-            if(rateString.isEmpty()){
+            var rateString =
+                food_map_activity_dragOptionLayoutRateFilterInput_EditText.text.toString()
+            if (rateString.isEmpty()) {
                 rateString = "0"
             }
-            var reviewCount = food_map_activity_dragOptionLayoutReviewCountFilterInput_EditText.text.toString()
-            if(reviewCount.isEmpty()){
+            var reviewCount =
+                food_map_activity_dragOptionLayoutReviewCountFilterInput_EditText.text.toString()
+            if (reviewCount.isEmpty()) {
                 reviewCount = "0"
             }
             val currentFilterState = FilterData(
@@ -157,16 +173,17 @@ class FoodMapActivity : AppCompatActivity() {
                 rateString.toDouble(),
                 reviewCount.toInt()
             )
-            if(rateString.toDouble() in 0.0..5.0){
+            if (rateString.toDouble() in 0.0..5.0) {
                 foodMapViewModel.hiddenSlideView()
                 foodMapViewModel.restaurantFilter(currentFilterState)
-            }else{
+            } else {
                 Toast.makeText(this, "평점은 0~5점 사이로 입력하세요.", Toast.LENGTH_LONG).show()
             }
 
         }
-    }
-    private fun initRangeButtonListener(){
+    }//필터 요청
+
+    private fun initRangeButtonListener() {
         food_map_activity_Range0_TextView.setOnClickListener {
             optionViewModel.clickRangeButton(0)
         }
@@ -179,11 +196,12 @@ class FoodMapActivity : AppCompatActivity() {
         food_map_activity_Range3_TextView.setOnClickListener {
             optionViewModel.clickRangeButton(3)
         }
-    }
-    private fun initRefreshButton(){
+    }//범위 버튼 초기화
+
+    private fun initRefreshButton() {
         food_map_activity_refresh_Button.setOnClickListener {
             foodMapViewModel.initLocationAndCallApi()
         }
-    }
+    }//위치 새로고침 버튼
 
 }

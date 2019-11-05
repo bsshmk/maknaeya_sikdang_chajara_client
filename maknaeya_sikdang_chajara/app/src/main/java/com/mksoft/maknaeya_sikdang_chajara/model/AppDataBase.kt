@@ -5,6 +5,6 @@ import androidx.room.RoomDatabase
 
 @Database(entities = [Restaurant::class, OptionState::class], version = 1)
 abstract class AppDataBase : RoomDatabase() {
-    abstract fun restaurantInfoDao():RestaurantInfoDao
-    abstract fun optionStateDao():OptionStateDao
+    abstract fun restaurantInfoDao(): RestaurantInfoDao
+    abstract fun optionStateDao(): OptionStateDao
 }

@@ -62,10 +62,9 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     val slideViewState: MutableLiveData<String> = MutableLiveData()
 
 
-
-    val reviewVisible:MutableLiveData<Int> = MutableLiveData()
-    val optionViewVisible:MutableLiveData<Int> = MutableLiveData()
-    val slideViewHeight:MutableLiveData<Int> = MutableLiveData()
+    val reviewVisible: MutableLiveData<Int> = MutableLiveData()
+    val optionViewVisible: MutableLiveData<Int> = MutableLiveData()
+    val slideViewHeight: MutableLiveData<Int> = MutableLiveData()
 
     val slideViewRestaurantName: MutableLiveData<String> = MutableLiveData()
     val slideViewRestaurantRate: MutableLiveData<String> = MutableLiveData()
@@ -78,17 +77,17 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     val errorClickListerDenyPermission = View.OnClickListener { checkPermission() }
     lateinit var locationManager: LocationManager
     private var location: Location? = null
-    var scrollView:ScrollView? = null
+    var scrollView: ScrollView? = null
 
     init {
         terminateLoadRefresh()
         checkPermission()
         hiddenSlideView()
-        
+
 
     }
-
-    private fun getReviewList(restaurantId: String){
+    //activity 초기상태 설정
+    private fun getReviewList(restaurantId: String) {
         subscription = foodMapAPI.getReview(restaurantId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -97,15 +96,16 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
                     restaurantIdAndReview[restaurantId] = reviewList
 
                 },
-                { err -> Log.d("getReviewList", err.toString())}
+                { err -> Log.d("getReviewList", err.toString()) }
             )
-    }
-    private fun getRestaurant(location:Location) {
+    }//서버로부터 restaurantId을 통하여 음식점 리스트 반환 후 hashMap에 저장
+
+    private fun getRestaurant(location: Location) {
         subscription = foodMapAPI.getRestaurant(location!!.latitude, location!!.longitude, 2.0)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe{loadRefresh()}
-            .doOnTerminate{terminateLoadRefresh()}
+            .doOnSubscribe { loadRefresh() }
+            .doOnTerminate { terminateLoadRefresh() }
 
             .subscribe(
                 { restaurantList ->
@@ -116,41 +116,47 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
                     }
 
                 },
-                { err-> Log.d("getRestaurant", err.toString())
-                    failLoadRestaurant() }
+                { err ->
+                    Log.d("getRestaurant", err.toString())
+                    failLoadRestaurant()
+                }
             )
     }
-
+    //서버로 경도 위도 범위 요청시에 그 주변 레스토랑 정보 받기 후 hashMap에 ID별로 restaurant정보 저장
     override fun onCleared() {
         super.onCleared()
         subscription.dispose()
-    }
+    }//viewModel이 끝날 때 돌고 있는 subscription 종료
 
     fun refreshMap() {
         FoodMapActivity.getMapFragment().getMapAsync(this)
-        //엑티비티가 파괴되고 다시 엑티비티를 만들었을 때 싱크를 맞춰주는 용도
     }
+    //맵의 싱크를 맞춰주는 함수
 
     private fun initInfoWind(id: String) {
         restaurantIdAndInfoWindow[id] = InfoWindow()
         restaurantIdAndInfoWindow[id]!!.onClickListener = infoWindowListener()
 
 
-        restaurantIdAndInfoWindow[id]!!.adapter = object : InfoWindow.DefaultViewAdapter(App.applicationContext()) {
+        restaurantIdAndInfoWindow[id]!!.adapter =
+            object : InfoWindow.DefaultViewAdapter(App.applicationContext()) {
 
-            override fun getContentView(p0: InfoWindow): View {
+                override fun getContentView(p0: InfoWindow): View {
 
-                return restaurantIdAndSimpleView[id]!!
+                    return restaurantIdAndSimpleView[id]!!
+                }
+
             }
-
-        }
     }
+    //지도에서 marker 클릭시 info window에 simple view(간단한 음식점 정보) binding
 
 
     private fun makeSimpleInfoView(context: Context, restaurantId: String) {
         val simpleInfoView = View.inflate(context, layout.simple_info_window_view, null)
-        val simpleInfoTitle = simpleInfoView.findViewById<TextView>(id.simple_info_window_view_restaurantName_TextView)
-        val simpleInfoRate = simpleInfoView.findViewById<TextView>(id.simple_info_window_view_restaurantRate_TextView)
+        val simpleInfoTitle =
+            simpleInfoView.findViewById<TextView>(id.simple_info_window_view_restaurantName_TextView)
+        val simpleInfoRate =
+            simpleInfoView.findViewById<TextView>(id.simple_info_window_view_restaurantRate_TextView)
         val simpleInfoReviewCountNumber =
             simpleInfoView.findViewById<TextView>(id.simple_info_window_view_restaurantReviewCount_TextView)
         val simpleInfoMainMenu =
@@ -166,6 +172,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
 
         restaurantIdAndSimpleView[restaurantId] = simpleInfoView
     }
+    //restaurantID 별로 simpleView를 만들어서 hashMap에 저장
 
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
@@ -175,16 +182,17 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
 
             restaurantIdAndMarker[ID]!!.map = null
 
-        }
+        }//전 상태의 marker들을 모두 닫고
         preMarkerRestaurantIdList.clear()
         val locationOverlay = naverMap.locationOverlay
-        if(location != null){
+        if (location != null) {
             locationOverlay.position = LatLng(location!!.latitude, location!!.longitude)
-            val cameraUpdate = CameraUpdate.scrollTo(LatLng(location!!.latitude, location!!.longitude))
+            val cameraUpdate =
+                CameraUpdate.scrollTo(LatLng(location!!.latitude, location!!.longitude))
             naverMap.moveCamera(cameraUpdate)
             locationOverlay.isVisible = true
 
-        }
+        }//현재 위치로 맵을 이동하고
 
         for (ID in currentMarkerRestaurantIdList) {
             if (restaurantIdAndMarker[ID] == null) {
@@ -194,7 +202,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
             }
             restaurantIdAndMarker[ID]!!.map = naverMap
 
-        }
+        }//필터로 걸러진 현재 음식점 marker를 오픈하고
         naverMap.setOnMapClickListener { pointF, latLng ->
             if (currentOpenInfoWindowRestaurantId != "") {
                 restaurantIdAndInfoWindow[currentOpenInfoWindowRestaurantId]!!.close()
@@ -241,7 +249,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
                 visibleReviewSlideView()
                 restaurantIdAndInfoWindow[id]!!.open(restaurantIdAndMarker[id]!!)
                 currentOpenInfoWindowRestaurantId = id
-                bindingSlideView(id)
+                bindingSlideViewToRestaurantInfo(id)
                 //여기에 슬라이드 뷰 바인딩을..
             } else {
                 // 이미 현재 마커에 정보 창이 열려있을 경우 닫음
@@ -263,7 +271,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
         slideViewState.value = "hidden"
 
     }
-
+    //slide view 하나로 option view와 detail info view 관리
     fun visibleReviewSlideView() {
         reviewVisible.value = View.VISIBLE
         optionViewVisible.value = View.GONE
@@ -272,8 +280,9 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
         slideViewState.value = "visible"
         slideViewHeight.value = 58
 
-    }
-    fun visibleOptionSlideView(){
+    }//review view(small)로 slide view를 갱신
+
+    fun visibleOptionSlideView() {
         reviewVisible.value = View.GONE
         optionViewVisible.value = View.VISIBLE
         scrollView!!.isFocusableInTouchMode = true
@@ -281,7 +290,8 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
         slideViewState.value = "full"
         slideViewHeight.value = 0
 
-    }
+    }//option view로 slide view를 갱신
+
     fun fullVisibleReviewSlideView() {
         reviewVisible.value = View.VISIBLE
         optionViewVisible.value = View.GONE
@@ -290,24 +300,28 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
         slideViewState.value = "full"
         slideViewHeight.value = 58
 
-    }
+    }//review view(large)로 slide view를 갱신
 
-    fun halfHiddenSlideView(){
+    fun halfHiddenSlideView() {
         scrollView!!.fullScroll(ScrollView.FOCUS_UP)
         scrollView!!.isFocusableInTouchMode = true
         scrollView!!.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
         slideViewState.value = "collapsed"
 
-    }
+    }//slide view 포커스를 위쪽으로 옮기고 숨기기
+
     private fun failLoadRestaurant() {
         errorMessage.value = com.mksoft.maknaeya_sikdang_chajara.R.string.fail_receive
-    }
+    }//load fail함수
 
-    private fun checkPermission(){
+    private fun checkPermission() {
         TedRx2Permission.with(App.applicationContext())
             .setRationaleTitle("권한 요청")
             .setRationaleMessage("위치 권한이 필요합니다.") // "we need permission for read contact and find your location"
-            .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+            .setPermissions(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
             .request()
             .subscribe({ tedPermissionResult ->
                 if (tedPermissionResult.isGranted) {
@@ -316,22 +330,26 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
                     denyPermission()
                 }
             },
-                {
-                    err-> Log.d("checkPermission",  err.toString())
+                { err ->
+                    Log.d("checkPermission", err.toString())
                     initLocationAndCallApi()
                 })//이미 권한이 허가가 되어 있을 때 여기로 넘어온다.
-    }
+    }//권한 확인
+
     @SuppressLint("MissingPermission")
-    fun initLocationAndCallApi(){
-        locationManager = App.applicationContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    fun initLocationAndCallApi() {
+        locationManager =
+            App.applicationContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
         refreshMap()//권한을 받고 위치 갱신
         getRestaurant(location!!)
-    }
-    private fun denyPermission(){
+    }//위치 반환
+
+    private fun denyPermission() {
         errorMessage.value = string.deny_permission
-    }
-    private fun bindingSlideView(restaurantId: String) {
+    }//권한 거부 상태
+
+    private fun bindingSlideViewToRestaurantInfo(restaurantId: String) {
 
 
         slideViewRestaurantName.value = restaurantIdAndRestaurant[restaurantId]!!.restaurant_name
@@ -344,24 +362,29 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
         slideViewRestaurantImageSrc.value = restaurantIdAndRestaurant[restaurantId]!!.image_src
         if (restaurantIdAndReview[restaurantId] != null)
             reviewListAdapter.updateReviewList(restaurantIdAndReview[restaurantId]!!)
-    }
-    fun initScrollView(scrollView:ScrollView){
+    }//slide view에 레스토랑 정보로 바인딩
+
+    fun initScrollView(scrollView: ScrollView) {
         this.scrollView = scrollView
-    }
-    fun terminateLoadRefresh(){
-        loadingVisibility.value =View.GONE
+    }//스크롤뷰 포커스를 탑으로 옮기기 위하여
+
+    private fun terminateLoadRefresh() {
+        loadingVisibility.value = View.GONE
         refreshButtonVisibility.value = View.VISIBLE
-    }
-    fun loadRefresh(){
-        loadingVisibility.value =View.VISIBLE
+    }//로딩이 끝났을 때 리프래시 버튼 상태
+
+    private fun loadRefresh() {
+        loadingVisibility.value = View.VISIBLE
         refreshButtonVisibility.value = View.GONE
-    }
-    fun restaurantFilter(filterData: FilterData){
+    }//로딩할 시 리프래시 버튼 상태
+
+    fun restaurantFilter(filterData: FilterData) {
         preMarkerRestaurantIdList = currentMarkerRestaurantIdList
-        currentMarkerRestaurantIdList = Filtering(restaurantIdAndRestaurant, restaurantIdAndReview, filterData)
+        currentMarkerRestaurantIdList =
+            Filtering(restaurantIdAndRestaurant, restaurantIdAndReview, filterData)
         refreshMap()
 
-    }
+    }//레스토랑 필터 함수
 
 }
 

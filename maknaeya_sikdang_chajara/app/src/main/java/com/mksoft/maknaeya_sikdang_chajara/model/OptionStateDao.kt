@@ -9,7 +9,8 @@ import androidx.room.Query
 @Dao
 interface OptionStateDao {
     @Query("SELECT * FROM optionstate")
-    fun getOptionState():List<OptionState>
+    fun getOptionState(): List<OptionState>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOptionState(vararg optionStates:OptionState)
+    fun insertOptionState(vararg optionStates: OptionState)
 }

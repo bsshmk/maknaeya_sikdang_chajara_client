@@ -10,18 +10,19 @@ import com.mksoft.maknaeya_sikdang_chajara.viewmodel.OptionViewModel
 import com.mksoft.mkjw_second_project.di.module.DataBaseModule
 import com.mksoft.mkjw_second_project.di.module.NetworkModule
 
-abstract class BaseViewModel: ViewModel(){
+abstract class BaseViewModel : ViewModel() {
     private val injector: AppComponent =
         DaggerAppComponent.builder()
             .dataBaseModule(DataBaseModule(App.applicationContext() as Application))
             .networkModule(NetworkModule())
             .build()//여기서 한번 초기화시켜주자
 
-    init{
+    init {
         inject()
     }
-    private fun inject(){
-        when(this){
+
+    private fun inject() {
+        when (this) {
             is FoodMapViewModel -> injector.inject(this)
             is OptionViewModel -> injector.inject(this)
         }
