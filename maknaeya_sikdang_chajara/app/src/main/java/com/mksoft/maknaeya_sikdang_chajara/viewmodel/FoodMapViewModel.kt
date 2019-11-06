@@ -3,6 +3,7 @@ package com.mksoft.maknaeya_sikdang_chajara.viewmodel
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
 import android.util.Log
@@ -24,18 +25,17 @@ import com.mksoft.maknaeya_sikdang_chajara.ui_view.ReviewListAdapter
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
-import com.naver.maps.map.overlay.Overlay
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import com.tedpark.tedpermission.rx2.TedRx2Permission
-import com.naver.maps.map.overlay.InfoWindow
-import com.naver.maps.map.overlay.Marker
 import com.mksoft.maknaeya_sikdang_chajara.model.Restaurant
 import com.mksoft.maknaeya_sikdang_chajara.utils.Filtering
 import com.naver.maps.map.CameraUpdate
-import com.naver.maps.map.overlay.OverlayImage
+import com.naver.maps.map.overlay.*
+import java.util.*
+import kotlin.collections.HashMap
 
 
 class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
@@ -79,7 +79,19 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     private var location: Location? = null
     var scrollView: ScrollView? = null
 
+
+    private val shortestPath = PathOverlay()
+    var currentNaverMap: NaverMap ?= null
+
+
+    override fun onCleared() {
+        super.onCleared()
+        subscription.dispose()
+
+    }//viewModel이 끝날 때 돌고 있는 subscription 종료
+
     init {
+        shortestPath.color = Color.YELLOW
         terminateLoadRefresh()
         checkPermission()
         hiddenSlideView()
@@ -123,10 +135,6 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
             )
     }
     //서버로 경도 위도 범위 요청시에 그 주변 레스토랑 정보 받기 후 hashMap에 ID별로 restaurant정보 저장
-    override fun onCleared() {
-        super.onCleared()
-        subscription.dispose()
-    }//viewModel이 끝날 때 돌고 있는 subscription 종료
 
     fun refreshMap() {
         FoodMapActivity.getMapFragment().getMapAsync(this)
@@ -208,9 +216,11 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
                 restaurantIdAndInfoWindow[currentOpenInfoWindowRestaurantId]!!.close()
                 currentOpenInfoWindowRestaurantId = ""
                 hiddenSlideView()
+                shortestPath.map = null//경로 숨기기
             }
         }//맵의 다른 부분을 누르면 현재 열려있는 infoWindow창을 close
         //
+        currentNaverMap = naverMap//최단 경로를 그리기 위하여 전역에 저장
     }
 
 
@@ -251,10 +261,13 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
                 currentOpenInfoWindowRestaurantId = id
                 bindingSlideViewToRestaurantInfo(id)
                 //여기에 슬라이드 뷰 바인딩을..
+
+                testPath()//경로 요청하고 경로 갱신
             } else {
                 // 이미 현재 마커에 정보 창이 열려있을 경우 닫음
                 restaurantIdAndInfoWindow[id]!!.close()
                 currentOpenInfoWindowRestaurantId = ""
+                shortestPath.map = null
                 hiddenSlideView()
                 //이거 호출하면 맵이 리프래쉬됨
                 //필터를 통하여 남은 음식적으로 리스트로 만들어서 관리
@@ -315,7 +328,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     }//load fail함수
 
     private fun checkPermission() {
-        TedRx2Permission.with(App.applicationContext())
+        subscription = TedRx2Permission.with(App.applicationContext())
             .setRationaleTitle("권한 요청")
             .setRationaleMessage("위치 권한이 필요합니다.") // "we need permission for read contact and find your location"
             .setPermissions(
@@ -386,5 +399,26 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
 
     }//레스토랑 필터 함수
 
+    private fun setShortestPaht(latLngList:List<LatLng>){
+        shortestPath.coords = latLngList
+        shortestPath.map = currentNaverMap
+    }
+    private fun testPath(){
+        val latLngList = mutableListOf<LatLng>()
+        val temp1 = LatLng(37.452194, 126.653080)
+        val temp2 = LatLng(37.451964, 126.653735)
+        val temp3 = LatLng(37.451768, 126.654400)
+        val temp4 = LatLng(37.451589, 126.655162)
+        val temp5 = LatLng(37.451427, 126.655805)
+        latLngList.add(temp1)
+        latLngList.add(temp2)
+        latLngList.add(temp3)
+        latLngList.add(temp4)
+        latLngList.add(temp5)
+        setShortestPaht(latLngList)
+
+
+
+    }//테스트로 경로가 그려지는지 확인
 }
 
