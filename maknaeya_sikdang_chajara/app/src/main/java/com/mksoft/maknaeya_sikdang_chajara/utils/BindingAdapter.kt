@@ -12,6 +12,7 @@ import androidx.databinding.BindingAdapter
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.toolbox.NetworkImageView
 import com.bumptech.glide.Glide
 import com.mksoft.maknaeya_sikdang_chajara.App
 import com.mksoft.maknaeya_sikdang_chajara.R
@@ -24,11 +25,12 @@ fun setAdapter(view: RecyclerView, adapter: RecyclerView.Adapter<*>) {
 
 
 @BindingAdapter("mutableImage")
-fun setImage(view: ImageView, imageSrc: MutableLiveData<String>?) {
+fun setImage(view: NetworkImageView, imageSrc: MutableLiveData<String>?) {
     val parentActivity: AppCompatActivity? = view.getParentActivity()
     if (parentActivity != null && imageSrc != null) {
         imageSrc.observe(parentActivity, Observer { value ->
-            Glide.with(App.applicationContext()).load(value).into(view)
+            //Glide.with(App.applicationContext()).load(value).into(view)
+            ImageRequest.setImageFromUrl(view, value)
         })
     }
 }//이미지 바인딩
