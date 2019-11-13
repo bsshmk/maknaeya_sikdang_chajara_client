@@ -1,5 +1,6 @@
 package com.mksoft.maknaeya_sikdang_chajara.utils
 
+import androidx.collection.ArrayMap
 import com.mksoft.maknaeya_sikdang_chajara.model.FilterData
 import com.mksoft.maknaeya_sikdang_chajara.model.Restaurant
 import com.mksoft.maknaeya_sikdang_chajara.model.Review
@@ -8,8 +9,8 @@ import com.mksoft.maknaeya_sikdang_chajara.model.Review
 //class OptionFilter {
 
 fun Filtering(
-    restaurants: HashMap<String, Restaurant>,
-    reviews: HashMap<String, MutableList<Review>>,
+    restaurants: ArrayMap<String, Restaurant>,
+    reviews: ArrayMap<String, MutableList<Review>>,
     filters: FilterData
 ): MutableList<String> {
 

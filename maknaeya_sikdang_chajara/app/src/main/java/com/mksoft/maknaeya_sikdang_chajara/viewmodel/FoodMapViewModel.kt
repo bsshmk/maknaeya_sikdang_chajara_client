@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.annotation.UiThread
+import androidx.collection.ArrayMap
 import androidx.lifecycle.MutableLiveData
 import com.mksoft.maknaeya_sikdang_chajara.App
 import com.mksoft.maknaeya_sikdang_chajara.R
@@ -48,11 +49,11 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     private var preMarkerRestaurantIdList = mutableListOf<String>()
     private val totalRestaurantIdList = mutableListOf<String>()
 
-    private val restaurantIdAndRestaurant: HashMap<String, Restaurant> = HashMap()
-    private val restaurantIdAndMarker: HashMap<String, Marker> = HashMap()
-    private val restaurantIdAndReview: HashMap<String, MutableList<Review>> = HashMap()
-    private val restaurantIdAndInfoWindow: HashMap<String, InfoWindow> = HashMap()
-    val restaurantIdAndSimpleView: HashMap<String, View> = HashMap()//한번 클릭시 보이는 뷰
+    private val restaurantIdAndRestaurant: ArrayMap<String, Restaurant> = ArrayMap()
+    private val restaurantIdAndMarker: ArrayMap<String, Marker> = ArrayMap()
+    private val restaurantIdAndReview: ArrayMap<String, MutableList<Review>> = ArrayMap()
+    private val restaurantIdAndInfoWindow: ArrayMap<String, InfoWindow> = ArrayMap()
+    val restaurantIdAndSimpleView: ArrayMap<String, View> = ArrayMap()//한번 클릭시 보이는 뷰
 
     private var currentOpenInfoWindowRestaurantId: String = ""
     private lateinit var subscription: Disposable
