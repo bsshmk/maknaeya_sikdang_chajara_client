@@ -61,3 +61,23 @@
  
 ### Demo
 <img src="https://github.com/bsshmk/maknaeya_sikdang_chajara_client/blob/master/Demo/test.gif" alt="alt text" width="250px" height="500px">
+
+## Test
+
+### Memory leak test
+
+Mock Up
+
+<img src="https://github.com/bsshmk/maknaeya_sikdang_chajara_client/blob/master/Demo/memory%20leak%20test%20mock%20up.png" alt="alt text" width="600px" height="300px">
+
+Button만 있는 흰 activity에서 main activity(FoodMapActivity)를 만들어 주자. 그리고 main activity를 파괴하고 다시 Button만 있는 흰 activity로 만들어 주자. 이를 반복하자
+
+test result
+
+<img src="https://github.com/bsshmk/maknaeya_sikdang_chajara_client/blob/master/Demo/memory%20leak%20test.png" alt="alt text" width="600px" height="300px">
+
+첫 main activity(FoodMapActivity)를 초기화 이후에 button만 있는 흰 activity랑 80MB 정도 차이가 나서 memory leak으로 생각했다. 하지만 여러번 위 과정을 반복했을 때 main activity(FoodMapActivity)가 파괴되기 이전 memory와 같은 것을 발견할 수 있다. 이를 통하여 첫 main activity(FoodMapActivity) 초기화와 같이 food map view model를 초기화가 이루어지고 view model은 activity가 파괴되어도 유지되기 때문에 80MB가 결국 view model의 크기임을 알 수 있었다.
+
+memory allocation을 통하여 heap memory가 어떻게 할당 되었는지 추적하려고 했지만 profiler에서 result fetch가 되지 않아서 위와 같은 방법으로 확인하였다.
+
+
