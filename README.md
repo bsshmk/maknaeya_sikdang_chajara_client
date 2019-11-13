@@ -33,7 +33,7 @@
 
 
 ## 사용 라이브러리
-> LiveData, ViewModel, Room, Retrofit, Dagger 2, RxJava, slidinguppanel(슬라이드 뷰), databinding, tedpermission, glide, naver map
+> LiveData, ViewModel, Room, Retrofit, Dagger 2, RxJava, slidinguppanel(슬라이드 뷰), databinding, tedpermission, glide, naver map, volley
 
 
 
@@ -42,9 +42,9 @@
 
  전반적인 구조는 BaseViewModel을 정의하고 BaseBiewModel 에서 각각 필요한 Module들을 초기화하여 주입시킴.
 
- ViewModel에서 UI업데이트와 데이터 송수신을 처리해주고, UI업데이트를 위하여 DataBinding 이용.
+ ViewModel에서 UI업데이트와 데이터 송수신을 처리해주고, xml에서 UI업데이트를 위하여 DataBinding 이용.
  
- viewModel에서 restaurant ID 별로 hash map에 review list, marker, restaurant 저장하여 필요시에 불러다가 사용.
+ viewModel에서 restaurant ID 별로 array map에 review list, marker, restaurant 저장하여 필요시에 불러다가 사용.
  
  slide view는 1개로 운영하며 option page 상태일 때는 restaurant page를 숨기고, restaurant page 상태일 때는 option page를 숨김.
  
@@ -53,6 +53,8 @@
  option page에서 적용 button 클릭 시에 filter 상태에 따라서 원하는 음식점을 필터하고 화면에 marker를 통하여 표시
 
  refresh button 클릭시 현재 사용자 위치 기반으로 갱신
+ 
+ 
  
  
 ### Demo
