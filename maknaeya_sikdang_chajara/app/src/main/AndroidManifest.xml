@@ -1,30 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.mksoft.maknaeya_sikdang_chajara">
+        package="com.mksoft.maknaeya_sikdang_chajara">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
 
     <application
-            android:networkSecurityConfig="@xml/network_security_config"
             android:name=".App"
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
+            android:networkSecurityConfig="@xml/network_security_config"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <meta-data
                 android:name="com.naver.maps.map.CLIENT_ID"
                 android:value="1metpf57d9" />
-        <activity android:name=".ui_view.FoodMapActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+<!--        <activity android:name=".ui_view.MemoryLeakTestActivity">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
+        <activity
+                android:name=".ui_view.FoodMapActivity"
+                android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+<!--            <meta-data-->
+<!--                    android:name="android.support.PARENT_ACTIVITY"-->
+<!--                    android:value=".ui_view.MemoryLeakTestActivity" />-->
         </activity>
     </application>
 

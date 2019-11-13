@@ -49,6 +49,7 @@ class FoodMapActivity : AppCompatActivity() {
         initRangeButtonListener()
         initApplyButton()
         initRefreshButton()
+        initLeakTestFinishButton()
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
@@ -203,5 +204,12 @@ class FoodMapActivity : AppCompatActivity() {
             foodMapViewModel.initLocationAndCallApi()
         }
     }//위치 새로고침 버튼
+
+    private fun initLeakTestFinishButton(){
+        finishActivity.setOnClickListener {
+            finish()
+        }
+    }
+
 
 }

@@ -55,6 +55,13 @@
                     android:name="com.naver.maps.map.MapFragment"
             />
             <Button
+                    android:visibility="gone"
+                    android:layout_alignParentBottom="true"
+                    android:id="@+id/finishActivity"
+                    android:text="finish"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            <Button
                     android:id="@+id/food_map_activity_refresh_Button"
                     android:layout_width="38dp"
                     android:layout_height="38dp"
