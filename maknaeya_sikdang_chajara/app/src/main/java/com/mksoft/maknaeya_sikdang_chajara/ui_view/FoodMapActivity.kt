@@ -49,7 +49,7 @@ class FoodMapActivity : AppCompatActivity() {
         initRangeButtonListener()
         initApplyButton()
         initRefreshButton()
-        initLeakTestFinishButton()
+        //initLeakTestFinishButton()
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {

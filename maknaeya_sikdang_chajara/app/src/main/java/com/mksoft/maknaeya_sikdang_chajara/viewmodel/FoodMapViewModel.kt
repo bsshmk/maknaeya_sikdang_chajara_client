@@ -47,7 +47,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
 
     private var currentMarkerRestaurantIdList = mutableListOf<String>()//현재 관리되고 있는 레스토랑 id
     private var preMarkerRestaurantIdList = mutableListOf<String>()
-    private val totalRestaurantIdList = mutableListOf<String>()
+    //private val totalRestaurantIdList = mutableListOf<String>()
 
     private val restaurantIdAndRestaurant: ArrayMap<String, Restaurant> = ArrayMap()
     private val restaurantIdAndMarker: ArrayMap<String, Marker> = ArrayMap()
@@ -125,7 +125,8 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
                     for (item in restaurantList) {
                         restaurantIdAndRestaurant[item.restaurant_id] = item
                         getReviewList(item.restaurant_id)
-                        totalRestaurantIdList.add(item.restaurant_id)
+                        //totalRestaurantIdList.add(item.restaurant_id)
+
                     }
 
                 },
@@ -395,7 +396,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     fun restaurantFilter(filterData: FilterData) {
         preMarkerRestaurantIdList = currentMarkerRestaurantIdList
         currentMarkerRestaurantIdList =
-            Filtering(restaurantIdAndRestaurant, restaurantIdAndReview, filterData)
+            Filtering(restaurantIdAndRestaurant, restaurantIdAndReview, filterData)//
         refreshMap()
 
     }//레스토랑 필터 함수
