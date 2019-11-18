@@ -15,6 +15,7 @@
     >
 
         <TextView
+                android:fontFamily="@font/jua"
                 android:textColor="#FFF"
                 android:text="사용자 / 4.0"
                 android:textStyle="bold"
@@ -24,6 +25,7 @@
                 android:id="@+id/review_view_nameAndRate_TextView"
                 app:mutableText="@{viewModel.getNameAndRate()}"/>
         <TextView
+                android:fontFamily="@font/jua"
                 android:textColor="#FFF"
                 android:layout_margin="10dp"
                 android:text="내용"

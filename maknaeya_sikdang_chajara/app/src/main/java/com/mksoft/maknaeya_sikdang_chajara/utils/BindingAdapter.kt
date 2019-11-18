@@ -54,6 +54,7 @@ fun setMutableSlideViewState(view: SlidingUpPanelLayout, state: MutableLiveData<
     }
 }//슬라이드 뷰 크기 바인딩
 
+
 @BindingAdapter("mutableText")
 fun setMutableText(view: TextView, text: MutableLiveData<String>?) {
     val parentActivity: AppCompatActivity? = view.getParentActivity()

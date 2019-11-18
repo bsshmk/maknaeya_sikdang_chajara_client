@@ -37,6 +37,8 @@
                     android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
                     app:popupTheme="@style/Theme.AppCompat.NoActionBar">
                 <TextView
+                        android:fontFamily="@font/jua"
+
                         android:textColor="#FFF"
                         android:id="@+id/food_map_activity_title_TextView"
                         android:text="음식점"
@@ -108,6 +110,7 @@
                             android:background="#333333">
                         <TextView
                                 android:layout_marginLeft="15dp"
+                                android:fontFamily="@font/jua"
 
                                 android:layout_alignParentLeft="true"
                                 android:layout_centerVertical="true"
@@ -121,6 +124,7 @@
                                 android:layout_height="wrap_content"
                         />
                         <TextView
+                                android:fontFamily="@font/jua"
                                 android:gravity="center"
                                 android:layout_marginRight="20dp"
                                 android:textColor="#008577"
@@ -137,6 +141,7 @@
 
                     </RelativeLayout>
                     <TextView
+                            android:fontFamily="@font/jua"
                             android:layout_marginTop="30dp"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
@@ -161,6 +166,7 @@
                             android:background="@drawable/black_button"
                             android:layout_centerHorizontal="true">
                         <TextView
+                                android:fontFamily="@font/jua"
                                 android:id="@+id/food_map_activity_Range0_TextView"
                                 android:gravity="center"
                                 android:text="2.0"
@@ -170,6 +176,7 @@
                                 android:layout_weight="1"
                                 app:mutableTextColor="@{optionViewModel.getRangeButtonsState[0]}"/>
                         <TextView
+                                android:fontFamily="@font/jua"
 
                                 android:id="@+id/food_map_activity_Range1_TextView"
                                 app:mutableTextColor="@{optionViewModel.getRangeButtonsState[1]}"
@@ -180,6 +187,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"/>
                         <TextView
+                                android:fontFamily="@font/jua"
 
                                 android:id="@+id/food_map_activity_Range2_TextView"
                                 app:mutableTextColor="@{optionViewModel.getRangeButtonsState[2]}"
@@ -191,6 +199,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"/>
                         <TextView
+                                android:fontFamily="@font/jua"
 
                                 android:id="@+id/food_map_activity_Range3_TextView"
                                 app:mutableTextColor="@{optionViewModel.getRangeButtonsState[3]}"
@@ -216,6 +225,7 @@
                             android:background="#636363"/>
 
                     <TextView
+                            android:fontFamily="@font/jua"
                             android:layout_marginTop="40dp"
                             android:layout_marginLeft="10dp"
                             android:layout_below="@+id/food_map_activity_dragOptionViewRangeLayout_LinearLayout"
@@ -227,6 +237,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
                     <TextView
+                            android:fontFamily="@font/jua"
                             android:layout_marginTop="25dp"
                             android:layout_marginLeft="10dp"
                             android:layout_below="@+id/food_map_activity_dragOptionViewFilterTitle_TextView"
@@ -237,6 +248,7 @@
                             android:layout_width="80dp"
                             android:layout_height="wrap_content"/>
                     <EditText
+                            android:fontFamily="@font/jua"
                             android:theme="@style/EditTheme"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
@@ -252,6 +264,7 @@
                             android:textColor="#fff"
                             android:lines="1"/>
                     <TextView
+                            android:fontFamily="@font/jua"
                             android:layout_marginTop="25dp"
                             android:layout_marginLeft="10dp"
                             android:layout_below="@+id/food_map_activity_dragOptionLayoutKeywordFilterTitle_TextView"
@@ -262,6 +275,7 @@
                             android:layout_width="80dp"
                             android:layout_height="wrap_content"/>
                     <EditText
+                            android:fontFamily="@font/jua"
                             android:theme="@style/EditTheme"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
@@ -279,6 +293,7 @@
                             android:textColor="#fff"
                             android:lines="1"/>
                     <TextView
+                            android:fontFamily="@font/jua"
                             android:layout_marginTop="25dp"
                             android:layout_marginLeft="10dp"
                             android:layout_below="@+id/food_map_activity_dragOptionLayoutRateFilterTitle_TextView"
@@ -289,6 +304,7 @@
                             android:layout_width="80dp"
                             android:layout_height="wrap_content"/>
                     <EditText
+                            android:fontFamily="@font/jua"
                             android:theme="@style/EditTheme"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
@@ -321,6 +337,7 @@
                             android:layout_height="58dp"
                             android:background="#333333">
                         <TextView
+                                android:fontFamily="@font/jua"
                                 android:layout_marginLeft="15dp"
                                 android:gravity="center_vertical"
                                 android:textColor="#FFF"
@@ -334,6 +351,7 @@
                                 android:id="@+id/food_map_activity_dragLayoutRestaurantName_TextView"
                                 app:mutableText="@{foodViewModel.getSlideViewRestaurantName}"/>
                         <TextView
+                                android:fontFamily="@font/jua"
                                 android:layout_marginRight="20dp"
                                 android:gravity="center_vertical"
                                 android:textColor="#FFF"
@@ -370,6 +388,7 @@
                                 android:layout_alignParentRight="true"
                         >
                             <TextView
+                                    android:fontFamily="@font/jua"
                                     android:textColor="#FFF"
                                     android:layout_margin="5dp"
                                     android:text="text"
@@ -383,6 +402,7 @@
                     </LinearLayout>
 
                     <TextView
+                            android:fontFamily="@font/jua"
                             android:layout_margin="10dp"
                             android:textColor="#FFF"
                             android:id="@+id/food_map_activity_dragLayoutMainMenuPrices_TextView"
