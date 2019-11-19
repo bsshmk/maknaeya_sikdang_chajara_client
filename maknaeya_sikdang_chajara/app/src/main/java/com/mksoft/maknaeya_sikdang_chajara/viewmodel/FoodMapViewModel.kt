@@ -47,7 +47,6 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
 
     private var currentMarkerRestaurantIdList = mutableListOf<String>()//현재 관리되고 있는 레스토랑 id
     private var preMarkerRestaurantIdList = mutableListOf<String>()
-    //private val totalRestaurantIdList = mutableListOf<String>()
 
     private val restaurantIdAndRestaurant: ArrayMap<String, Restaurant> = ArrayMap()
     private val restaurantIdAndMarker: ArrayMap<String, Marker> = ArrayMap()
@@ -80,7 +79,6 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     private var location: Location? = null
     var scrollView: ScrollView? = null
 
-
     private val shortestPath = PathOverlay()
     var currentNaverMap: NaverMap ?= null
 
@@ -92,6 +90,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     }//viewModel이 끝날 때 돌고 있는 subscription 종료
 
     init {
+
         shortestPath.color = Color.YELLOW
         terminateLoadRefresh()
         checkPermission()
@@ -264,7 +263,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
                 bindingSlideViewToRestaurantInfo(id)
                 //여기에 슬라이드 뷰 바인딩을..
 
-                testPath()//경로 요청하고 경로 갱신
+                receiveShortestPath(location!!.latitude, location!!.longitude, restaurantIdAndRestaurant[id]!!.gps_N.toDouble(), restaurantIdAndRestaurant[id]!!.gps_E.toDouble())
             } else {
                 // 이미 현재 마커에 정보 창이 열려있을 경우 닫음
                 restaurantIdAndInfoWindow[id]!!.close()
@@ -401,26 +400,21 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
 
     }//레스토랑 필터 함수
 
-    private fun setShortestPaht(latLngList:List<LatLng>){
+    private fun setShortestPath(latLngList:List<LatLng>){
         shortestPath.coords = latLngList
         shortestPath.map = currentNaverMap
     }
-    private fun testPath(){
-        val latLngList = mutableListOf<LatLng>()
-        val temp1 = LatLng(37.452194, 126.653080)
-        val temp2 = LatLng(37.451964, 126.653735)
-        val temp3 = LatLng(37.451768, 126.654400)
-        val temp4 = LatLng(37.451589, 126.655162)
-        val temp5 = LatLng(37.451427, 126.655805)
-        latLngList.add(temp1)
-        latLngList.add(temp2)
-        latLngList.add(temp3)
-        latLngList.add(temp4)
-        latLngList.add(temp5)
-        setShortestPaht(latLngList)
+    private fun receiveShortestPath(lat1:Double, lng1:Double, lat2:Double, lng2:Double){
+        subscription = foodMapAPI.getFindRoad(lat1, lng1, lat2, lng2)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { shortestPath ->
+                    setShortestPath(shortestPath)
 
-
-
-    }//테스트로 경로가 그려지는지 확인
+                },
+                { err -> Log.d("receiveShortestPath", err.toString()) }
+            )
+    }
 }
 

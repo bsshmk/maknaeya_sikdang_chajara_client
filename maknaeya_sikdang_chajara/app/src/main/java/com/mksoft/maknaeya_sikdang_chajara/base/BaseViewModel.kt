@@ -17,6 +17,8 @@ abstract class BaseViewModel : ViewModel() {
             .networkModule(NetworkModule())
             .build()//여기서 한번 초기화시켜주자
 
+
+
     init {
         inject()
     }
