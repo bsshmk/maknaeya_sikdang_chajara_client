@@ -60,7 +60,14 @@
  
  
 ### Demo
+
+## version 2
+<img src="https://github.com/bsshmk/maknaeya_sikdang_chajara_client/blob/master/Demo/test2.gif" alt="alt text" width="250px" height="500px">
+
+## version 1
 <img src="https://github.com/bsshmk/maknaeya_sikdang_chajara_client/blob/master/Demo/test.gif" alt="alt text" width="250px" height="500px">
+
+
 
 ## Test
 
@@ -89,6 +96,8 @@ memory allocation을 통하여 heap memory가 어떻게 할당 되었는지 추�
 
 <img src="https://github.com/bsshmk/maknaeya_sikdang_chajara_client/blob/master/Demo/test_short_path3.png" alt="alt text" width="250px" height="500px">
 
-short path api 연결 완료!!!
+로컬에서 txt(도로정보)파일을 긁어서 set에 바인딩하여 bfs로 test하여 최단경로가 잘 작동하는지 확인
 
-로직은 https://github.com/bsshmk/maknaeya_sikdang_chajara_api 확인 !!
+후에 server short path api 연결 완료!!!
+
+server short path api로직은 https://github.com/bsshmk/maknaeya_sikdang_chajara_api 확인 !!
