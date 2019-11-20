@@ -7,7 +7,7 @@ import com.naver.maps.geometry.LatLng
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.*
-
+//로컬에서 최단 경로 테스트
 class CaculateShortPath {
 
     var rate = 110.574 / (111.320 * Math.cos(37.550396 * Math.PI / 180))

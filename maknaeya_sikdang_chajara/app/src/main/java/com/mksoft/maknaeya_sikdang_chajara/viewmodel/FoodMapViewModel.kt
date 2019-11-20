@@ -42,8 +42,8 @@ import kotlin.collections.HashMap
 
 class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
 
-    val caculateShort = CaculateShortPath()
-
+    //val caculateShort = CaculateShortPath()
+    //로컬 테스트용
     @Inject
     lateinit var foodMapAPI: FoodMapAPI
 
@@ -419,8 +419,8 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
                 { err -> Log.d("receiveShortestPath", err.toString()) }
             )
     }
-    private fun testPath(lat1:Double, lng1:Double, lat2:Double, lng2:Double){
-        setShortestPath(caculateShort.searchShortestPathList(lat1, lng1, lat2, lng2))
-    }
+//    private fun testPath(lat1:Double, lng1:Double, lat2:Double, lng2:Double){
+//        setShortestPath(caculateShort.searchShortestPathList(lat1, lng1, lat2, lng2))
+//    }
 }
 
