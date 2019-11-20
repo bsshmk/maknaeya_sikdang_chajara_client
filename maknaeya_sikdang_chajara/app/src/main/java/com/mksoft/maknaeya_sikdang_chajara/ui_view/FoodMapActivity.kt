@@ -18,6 +18,7 @@ import com.mksoft.maknaeya_sikdang_chajara.R
 import com.mksoft.maknaeya_sikdang_chajara.databinding.FoodMapActivityBinding
 import com.mksoft.maknaeya_sikdang_chajara.di.ViewModelFactory
 import com.mksoft.maknaeya_sikdang_chajara.model.FilterData
+import com.mksoft.maknaeya_sikdang_chajara.utils.BackPressCloseHandler
 import com.mksoft.maknaeya_sikdang_chajara.viewmodel.FoodMapViewModel
 import com.mksoft.maknaeya_sikdang_chajara.viewmodel.OptionViewModel
 import com.naver.maps.map.MapFragment
@@ -26,7 +27,7 @@ import kotlinx.android.synthetic.main.food_map_activity.*
 
 
 class FoodMapActivity : AppCompatActivity() {
-
+    private val backPressCloseHandler: BackPressCloseHandler = BackPressCloseHandler(this)
     private lateinit var fragmentManager: FragmentManager
     lateinit var mapFragment: MapFragment
     private lateinit var foodMapViewModel: FoodMapViewModel
@@ -114,10 +115,13 @@ class FoodMapActivity : AppCompatActivity() {
 
     }
 
+
     override fun onBackPressed() {
         if (reviewLayout != null && (reviewLayout!!.panelState == SlidingUpPanelLayout.PanelState.EXPANDED || reviewLayout!!.panelState == SlidingUpPanelLayout.PanelState.ANCHORED)) {
             foodMapViewModel.halfHiddenSlideView()
 
+        }else{
+            backPressCloseHandler.onBackPressed()
         }
     }//슬라이딩한 페이지 숨기기
 

@@ -399,6 +399,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
         preMarkerRestaurantIdList = currentMarkerRestaurantIdList
         currentMarkerRestaurantIdList =
             Filtering(restaurantIdAndRestaurant, restaurantIdAndReview, filterData)//
+        shortestPath.map = null
         refreshMap()
 
     }//레스토랑 필터 함수
