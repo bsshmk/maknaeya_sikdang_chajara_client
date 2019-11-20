@@ -81,3 +81,16 @@ test result
 memory allocation을 통하여 heap memory가 어떻게 할당 되었는지 추적하려고 했지만 profiler에서 result fetch가 되지 않아서 위와 같은 방법으로 확인하였다.
 
 
+### Short path test
+
+<img src="https://github.com/bsshmk/maknaeya_sikdang_chajara_client/blob/master/Demo/test_short_path1.png" alt="alt text" width="250px" height="500px">
+
+<img src="https://github.com/bsshmk/maknaeya_sikdang_chajara_client/blob/master/Demo/test_short_path2.png" alt="alt text" width="250px" height="500px">
+
+<img src="https://github.com/bsshmk/maknaeya_sikdang_chajara_client/blob/master/Demo/test_short_path3.png" alt="alt text" width="250px" height="500px">
+
+
+로컬에서 최단경로 테스트... 서버로 옮기는 중...
+
+txt을 통하여 set 바인딩 시키고 bfs를 통하여 path list 반환 받아서 화면에 보여주기
+
