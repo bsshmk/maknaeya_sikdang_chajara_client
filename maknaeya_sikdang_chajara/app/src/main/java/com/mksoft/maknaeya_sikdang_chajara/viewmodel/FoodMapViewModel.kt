@@ -32,6 +32,7 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import com.tedpark.tedpermission.rx2.TedRx2Permission
 import com.mksoft.maknaeya_sikdang_chajara.model.Restaurant
+import com.mksoft.maknaeya_sikdang_chajara.testHex.CaculateShortPath
 import com.mksoft.maknaeya_sikdang_chajara.utils.Filtering
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.overlay.*
@@ -40,6 +41,8 @@ import kotlin.collections.HashMap
 
 
 class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
+
+    val caculateShort = CaculateShortPath()
 
     @Inject
     lateinit var foodMapAPI: FoodMapAPI
@@ -96,7 +99,6 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
         checkPermission()
         hiddenSlideView()
 
-
     }
     //activity 초기상태 설정
     private fun getReviewList(restaurantId: String) {
@@ -145,7 +147,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     private fun initInfoWind(id: String) {
         restaurantIdAndInfoWindow[id] = InfoWindow()
         restaurantIdAndInfoWindow[id]!!.onClickListener = infoWindowListener()
-
+        restaurantIdAndInfoWindow[id]!!.alpha = 0.8F
 
         restaurantIdAndInfoWindow[id]!!.adapter =
             object : InfoWindow.DefaultViewAdapter(App.applicationContext()) {
@@ -264,6 +266,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
                 //여기에 슬라이드 뷰 바인딩을..
 
                 receiveShortestPath(location!!.latitude, location!!.longitude, restaurantIdAndRestaurant[id]!!.gps_N.toDouble(), restaurantIdAndRestaurant[id]!!.gps_E.toDouble())
+                //testPath(location!!.latitude, location!!.longitude, restaurantIdAndRestaurant[id]!!.gps_N.toDouble(), restaurantIdAndRestaurant[id]!!.gps_E.toDouble())
             } else {
                 // 이미 현재 마커에 정보 창이 열려있을 경우 닫음
                 restaurantIdAndInfoWindow[id]!!.close()
@@ -354,7 +357,7 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
     fun initLocationAndCallApi() {
         locationManager =
             App.applicationContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         refreshMap()//권한을 받고 위치 갱신
         getRestaurant(location!!)
     }//위치 반환
@@ -415,6 +418,9 @@ class FoodMapViewModel : BaseViewModel(), OnMapReadyCallback {
                 },
                 { err -> Log.d("receiveShortestPath", err.toString()) }
             )
+    }
+    private fun testPath(lat1:Double, lng1:Double, lat2:Double, lng2:Double){
+        setShortestPath(caculateShort.searchShortestPathList(lat1, lng1, lat2, lng2))
     }
 }
 
