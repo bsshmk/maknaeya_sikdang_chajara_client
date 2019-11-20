@@ -89,8 +89,6 @@ memory allocation을 통하여 heap memory가 어떻게 할당 되었는지 추�
 
 <img src="https://github.com/bsshmk/maknaeya_sikdang_chajara_client/blob/master/Demo/test_short_path3.png" alt="alt text" width="250px" height="500px">
 
+short path api 연결 완료!!!
 
-로컬에서 최단경로 테스트... 서버로 옮기는 중...
-
-txt을 통하여 set 바인딩 시키고 bfs를 통하여 path list 반환 받아서 화면에 보여주기
-
+로직은 https://github.com/bsshmk/maknaeya_sikdang_chajara_api 확인 !!
